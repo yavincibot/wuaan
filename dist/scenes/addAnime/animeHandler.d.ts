@@ -1,0 +1,12 @@
+import { AnimeSessionData } from "./wizardSessionData.js";
+import AnimeWizardContext from "./animeWizardContext.js";
+declare function askAName(ctx: AnimeWizardContext): Promise<import("telegraf/typings/scenes/index.js").WizardContextWizard<import("telegraf/typings/scenes/index.js").WizardContext<AnimeSessionData>>>;
+declare function handleANameAskSeason(ctx: AnimeWizardContext): Promise<void | import("telegraf/typings/scenes/index.js").WizardContextWizard<import("telegraf/typings/scenes/index.js").WizardContext<AnimeSessionData>>>;
+declare function handleSeasonAskLang(ctx: AnimeWizardContext): Promise<void | import("telegraf/typings/scenes/index.js").WizardContextWizard<import("telegraf/typings/scenes/index.js").WizardContext<AnimeSessionData>>>;
+declare function handleLangAskQuality(ctx: AnimeWizardContext): Promise<void | import("telegraf/typings/scenes/index.js").WizardContextWizard<import("telegraf/typings/scenes/index.js").WizardContext<AnimeSessionData>>>;
+declare function handleQualityAskSub(ctx: AnimeWizardContext): Promise<void | import("telegraf/typings/scenes/index.js").WizardContextWizard<import("telegraf/typings/scenes/index.js").WizardContext<AnimeSessionData>>>;
+declare function handleSubAskEps(ctx: AnimeWizardContext): Promise<void | import("telegraf/typings/scenes/index.js").WizardContextWizard<import("telegraf/typings/scenes/index.js").WizardContext<AnimeSessionData>>>;
+declare function handleEpsAskPoster(ctx: AnimeWizardContext): Promise<void | import("telegraf/typings/scenes/index.js").WizardContextWizard<import("telegraf/typings/scenes/index.js").WizardContext<AnimeSessionData>>>;
+declare function handlePosterAskRelatedMsg(ctx: AnimeWizardContext): Promise<void | import("telegraf/typings/scenes/index.js").WizardContextWizard<import("telegraf/typings/scenes/index.js").WizardContext<AnimeSessionData>>>;
+declare function done(ctx: AnimeWizardContext): Promise<void>;
+export { askAName, done, handleSubAskEps, handleANameAskSeason, handleEpsAskPoster, handleLangAskQuality, handleQualityAskSub, handlePosterAskRelatedMsg, handleSeasonAskLang, };

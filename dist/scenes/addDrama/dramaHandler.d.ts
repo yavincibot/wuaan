@@ -1,0 +1,15 @@
+import { DramaSessionData } from "./wizardSessionData.js";
+import DramaWizardContext from "./dramaWizardContext.js";
+declare function askDName(ctx: DramaWizardContext): Promise<import("telegraf/typings/scenes/index.js").WizardContextWizard<import("telegraf/typings/scenes/index.js").WizardContext<DramaSessionData>>>;
+declare function handleDNameAskGenres(ctx: DramaWizardContext): Promise<void | import("telegraf/typings/scenes/index.js").WizardContextWizard<import("telegraf/typings/scenes/index.js").WizardContext<DramaSessionData>>>;
+declare function handleGeneresAskYear(ctx: DramaWizardContext): Promise<void | import("telegraf/typings/scenes/index.js").WizardContextWizard<import("telegraf/typings/scenes/index.js").WizardContext<DramaSessionData>>>;
+declare function handleYearAskSeason(ctx: DramaWizardContext): Promise<void | import("telegraf/typings/scenes/index.js").WizardContextWizard<import("telegraf/typings/scenes/index.js").WizardContext<DramaSessionData>>>;
+declare function handleSeasonAskLang(ctx: DramaWizardContext): Promise<void | import("telegraf/typings/scenes/index.js").WizardContextWizard<import("telegraf/typings/scenes/index.js").WizardContext<DramaSessionData>>>;
+declare function handleLangAskQuality(ctx: DramaWizardContext): Promise<void | import("telegraf/typings/scenes/index.js").WizardContextWizard<import("telegraf/typings/scenes/index.js").WizardContext<DramaSessionData>>>;
+declare function handleQualityAskRating(ctx: DramaWizardContext): Promise<void | import("telegraf/typings/scenes/index.js").WizardContextWizard<import("telegraf/typings/scenes/index.js").WizardContext<DramaSessionData>>>;
+declare function handleRatingAskSub(ctx: DramaWizardContext): Promise<void | import("telegraf/typings/scenes/index.js").WizardContextWizard<import("telegraf/typings/scenes/index.js").WizardContext<DramaSessionData>>>;
+declare function handleSubAskEps(ctx: DramaWizardContext): Promise<void | import("telegraf/typings/scenes/index.js").WizardContextWizard<import("telegraf/typings/scenes/index.js").WizardContext<DramaSessionData>>>;
+declare function handleEpsAskPoster(ctx: DramaWizardContext): Promise<void | import("telegraf/typings/scenes/index.js").WizardContextWizard<import("telegraf/typings/scenes/index.js").WizardContext<DramaSessionData>>>;
+declare function handlePosterAskRelatedMsg(ctx: DramaWizardContext): Promise<void | import("telegraf/typings/scenes/index.js").WizardContextWizard<import("telegraf/typings/scenes/index.js").WizardContext<DramaSessionData>>>;
+declare function done(ctx: DramaWizardContext): Promise<void>;
+export { askDName, done, handleSubAskEps, handleDNameAskGenres, handleEpsAskPoster, handleGeneresAskYear, handleLangAskQuality, handlePosterAskRelatedMsg, handleQualityAskRating, handleRatingAskSub, handleSeasonAskLang, handleYearAskSeason, };

@@ -1,0 +1,25 @@
+import "dotenv/config";
+declare const _default: {
+    token: string;
+    botUserName: string | undefined;
+    dbPosterLink: string | undefined;
+    dbPosterID: number;
+    development: string | undefined;
+    webhookDomain: string | undefined;
+    port: string | number;
+    channelSourceLink: string | undefined;
+    join: string;
+    collectionDrama: string;
+    collectionAnime: string;
+    collectionMovie: string;
+    dbAIOChannelId: number;
+    joinAnime: string;
+    collectionAIO: string | number;
+    channelSource: number;
+    allowGroups: number[];
+    forceGroupIds: number[];
+    adminIds: number[];
+    databaseUrl: string | undefined;
+    otherDomain: string;
+};
+export default _default;
