@@ -237,7 +237,7 @@ var Telegram = /** @class */ (function () {
                     case 4:
                         result = _a.sent();
                         resultIds.push(result.message_id);
-                        scheduleMessageDeletion(this, toChatId, messageId, 5);
+                        scheduleMessageDeletion(this, toChatId, result.message_id, 1);
                         success = true;
                         return [4 /*yield*/, delay(500, 1000)];
                     case 5:
