@@ -49,6 +49,7 @@ import filterAsync from "../extra/filterAsync.js";
 import mapAsync from "../extra/mapAsync.js";
 import splitArray from "../extra/splitArray.js";
 import { delay } from "../extra/delay.js";
+import { scheduleMessageDeletion } from "../extra/scheduleMessageDeletion.js";
 var Telegram = /** @class */ (function () {
     function Telegram() {
         this.app = new Telegraf(env.token);
@@ -236,6 +237,7 @@ var Telegram = /** @class */ (function () {
                     case 4:
                         result = _a.sent();
                         resultIds.push(result.message_id);
+                        scheduleMessageDeletion(this, toChatId, messageId, 5);
                         success = true;
                         return [4 /*yield*/, delay(500, 1000)];
                     case 5:
