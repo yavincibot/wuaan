@@ -42,7 +42,7 @@ export function scheduleMessageDeletion(bot, chatId, messageId, delayInMinutes) 
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, bot.telegram.deleteMessage(chatId, messageId)];
+                    return [4 /*yield*/, bot.app.telegram.deleteMessage(chatId, messageId)];
                 case 1:
                     _a.sent();
                     console.log("Message deleted successfully.");
