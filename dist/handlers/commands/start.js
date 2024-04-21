@@ -91,7 +91,7 @@ export default function startHandler(ctx) {
                     return [4 /*yield*/, database.getAIOMessages(Number(shareId))];
                 case 8:
                     messageIds = _b.sent();
-                    channel = env.dbAIOChannelId; //for al in one
+                    channel = env.dbAIOChannelId; //for all in one
                     _b.label = 9;
                 case 9:
                     if (!messageIds) {
@@ -102,7 +102,7 @@ export default function startHandler(ctx) {
                     if (!channel) {
                         throw Error("There must be DB_CHANNEL_ID and DB_MOVIE_CHANNEL_ID");
                     }
-                    return [4 /*yield*/, telegram.forwardMessages(chatId, channel, messageIds)];
+                    return [4 /*yield*/, telegram.forwardMessages(chatId, channel, messageIds, true)];
                 case 10:
                     _b.sent();
                     return [4 /*yield*/, reqDB.saveRequestData(userId.toString())];

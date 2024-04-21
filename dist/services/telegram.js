@@ -214,7 +214,8 @@ var Telegram = /** @class */ (function () {
         this.firstWaitingMessage = true;
         this.waitingMessageId = NaN;
     };
-    Telegram.prototype.forwardMessages = function (toChatId, fromChatId, messageIds) {
+    Telegram.prototype.forwardMessages = function (toChatId, fromChatId, messageIds, deleteOrNot) {
+        if (deleteOrNot === void 0) { deleteOrNot = false; }
         return __awaiter(this, void 0, void 0, function () {
             var resultIds, _i, messageIds_1, messageId, success, result, error_1;
             return __generator(this, function (_a) {
@@ -237,7 +238,9 @@ var Telegram = /** @class */ (function () {
                     case 4:
                         result = _a.sent();
                         resultIds.push(result.message_id);
-                        scheduleMessageDeletion(this, toChatId, result.message_id, 1);
+                        if (deleteOrNot) {
+                            scheduleMessageDeletion(this, toChatId, result.message_id, 5);
+                        }
                         success = true;
                         return [4 /*yield*/, delay(500, 1000)];
                     case 5:
