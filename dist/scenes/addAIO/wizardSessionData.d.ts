@@ -4,6 +4,7 @@ export interface AIOSessionData extends WizardSessionData {
     backupChannel?: string;
     file?: string;
     messageIds?: number[];
+    captions?: string[];
     aIOPosterID?: string;
     done?: boolean;
 }

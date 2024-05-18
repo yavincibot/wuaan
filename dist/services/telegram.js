@@ -50,6 +50,7 @@ import mapAsync from "../extra/mapAsync.js";
 import splitArray from "../extra/splitArray.js";
 import { delay } from "../extra/delay.js";
 import { scheduleMessageDeletion } from "../extra/scheduleMessageDeletion.js";
+import { processCaption } from "../utils/caption/editCaption.js";
 var Telegram = /** @class */ (function () {
     function Telegram() {
         this.app = new Telegraf(env.token);
@@ -214,59 +215,69 @@ var Telegram = /** @class */ (function () {
         this.firstWaitingMessage = true;
         this.waitingMessageId = NaN;
     };
-    Telegram.prototype.forwardMessages = function (toChatId, fromChatId, messageIds, deleteOrNot) {
+    Telegram.prototype.forwardMessages = function (toChatId, fromChatId, messageIds, deleteOrNot, captions) {
         if (deleteOrNot === void 0) { deleteOrNot = false; }
+        if (captions === void 0) { captions = []; }
         return __awaiter(this, void 0, void 0, function () {
-            var resultIds, _i, messageIds_1, messageId, success, result, error_1;
+            var resultIds, i, messageId, caption, success, result, result, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         resultIds = [];
-                        _i = 0, messageIds_1 = messageIds;
+                        i = 0;
                         _a.label = 1;
                     case 1:
-                        if (!(_i < messageIds_1.length)) return [3 /*break*/, 13];
-                        messageId = messageIds_1[_i];
+                        if (!(i < messageIds.length)) return [3 /*break*/, 16];
+                        messageId = messageIds[i];
+                        caption = captions[i];
                         success = false;
                         _a.label = 2;
                     case 2:
-                        if (!!success) return [3 /*break*/, 12];
+                        if (!!success) return [3 /*break*/, 15];
                         _a.label = 3;
                     case 3:
-                        _a.trys.push([3, 6, , 11]);
+                        _a.trys.push([3, 9, , 14]);
+                        if (!deleteOrNot) return [3 /*break*/, 5];
                         return [4 /*yield*/, this.app.telegram.copyMessage(toChatId, fromChatId, messageId)];
                     case 4:
                         result = _a.sent();
                         resultIds.push(result.message_id);
-                        if (deleteOrNot) {
-                            scheduleMessageDeletion(this, toChatId, result.message_id, 5);
-                        }
+                        scheduleMessageDeletion(this, toChatId, result.message_id, 5);
+                        return [3 /*break*/, 7];
+                    case 5: return [4 /*yield*/, this.app.telegram.copyMessage(toChatId, fromChatId, messageId, {
+                            caption: processCaption(caption, env.join),
+                        })];
+                    case 6:
+                        result = _a.sent();
+                        resultIds.push(result.message_id);
+                        _a.label = 7;
+                    case 7:
                         success = true;
                         return [4 /*yield*/, delay(500, 1000)];
-                    case 5:
+                    case 8:
                         _a.sent();
-                        return [3 /*break*/, 11];
-                    case 6:
+                        return [3 /*break*/, 14];
+                    case 9:
                         error_1 = _a.sent();
                         success = false;
-                        if (!(error_1.code === 429)) return [3 /*break*/, 8];
+                        if (!(error_1.code === 429)) return [3 /*break*/, 11];
                         console.log("".concat(error_1));
                         return [4 /*yield*/, new Promise(function (resolve) { return setTimeout(resolve, 40000); })];
-                    case 7:
+                    case 10:
                         _a.sent();
-                        return [3 /*break*/, 10];
-                    case 8:
+                        return [3 /*break*/, 13];
+                    case 11:
                         console.log("".concat(error_1));
                         return [4 /*yield*/, new Promise(function (resolve) { return setTimeout(resolve, 40000); })];
-                    case 9:
-                        _a.sent();
-                        _a.label = 10;
-                    case 10: return [3 /*break*/, 11];
-                    case 11: return [3 /*break*/, 2];
                     case 12:
-                        _i++;
+                        _a.sent();
+                        _a.label = 13;
+                    case 13: return [3 /*break*/, 14];
+                    case 14: return [3 /*break*/, 2];
+                    case 15:
+                        i++;
                         return [3 /*break*/, 1];
-                    case 13: return [2 /*return*/, resultIds];
+                    case 16: return [2 /*return*/, resultIds];
                 }
             });
         });

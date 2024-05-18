@@ -36,11 +36,15 @@ export function editAIOTitle(oldCaption, join) {
     var indexOfSize = newCaption.indexOf("🔘 SIZE");
     var request = newCaption.indexOf("Request");
     var credit = newCaption.indexOf("Credit/Partner");
+    var mkv = newCaption.indexOf("mkv");
     var plotIndex = newCaption.indexOf("Plot:");
     if (indexOfSize !== -1) {
         newCaption = newCaption.substring(0, indexOfSize);
     }
     if (credit !== -1) {
+        newCaption = newCaption.substring(0, credit) + "Thanks to Knc Korean";
+    }
+    if (mkv !== -1) {
         newCaption = newCaption.substring(0, credit) + "Thanks to Knc Korean";
     }
     if (request !== -1) {

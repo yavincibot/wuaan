@@ -7,6 +7,7 @@ export default interface PageSessionData extends WizardSessionData {
     editDelete?: string;
     tracker?: string;
     messageIds?: number[];
+    captions?: string[];
     genres?: string[];
     done?: boolean;
     selectedShareId?: number;

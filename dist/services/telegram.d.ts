@@ -20,7 +20,7 @@ declare class Telegram {
     }>;
     addMessage(chatId: number, messageId: number): void;
     clearMessages(chatId: number): void;
-    forwardMessages(toChatId: number, fromChatId: number, messageIds: number[], deleteOrNot?: boolean): Promise<number[]>;
+    forwardMessages(toChatId: number, fromChatId: number, messageIds: number[], deleteOrNot?: boolean, captions?: string[]): Promise<number[]>;
     getChatsUserHasNotJoined(userId: number): Promise<number[]>;
     alreadyJoinChat(chatId: number, userId: number): Promise<boolean>;
     getInviteLink(chatId: number): Promise<string>;
