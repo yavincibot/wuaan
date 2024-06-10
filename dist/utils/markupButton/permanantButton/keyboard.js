@@ -30,7 +30,7 @@ export var makeButtons = function (link, next, prev) {
         inline_keyboard: [
             [
                 { text: "⬅️ Prev", callback_data: prev },
-                { text: "Get This", url: link },
+                { text: "Download", url: link },
                 { text: "Next ➡️", callback_data: next },
             ],
             [{ text: "❣️❣️ Join K anime Love ❣️❣️", url: "https://t.me/".concat(env.join) }],
@@ -39,7 +39,10 @@ export var makeButtons = function (link, next, prev) {
 };
 export var makeCollectionButton = function (link) {
     return {
-        inline_keyboard: [[{ text: "Get This", url: link }]],
+        inline_keyboard: [
+            [{ text: "Download", url: link }],
+            [{ text: "❣️❣️Must Join KDL ❣️❣️", url: "https://t.me/".concat(env.join) }],
+        ],
     };
 };
 export var makeAdminButtons = function (link, next, prev) {

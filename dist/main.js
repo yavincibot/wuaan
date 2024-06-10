@@ -79,10 +79,6 @@ function main() {
                     server = express();
                     server.get("/check", function (req, res) {
                         res.sendStatus(200);
-                        // setInterval(() => {
-                        //   sendRequest();
-                        // }, 5 * 60 * 1000);
-                        // res.send("working server!");
                     });
                     port_1 = env.port;
                     _b = (_a = server).use;

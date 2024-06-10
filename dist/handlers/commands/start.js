@@ -68,7 +68,7 @@ export default function startHandler(ctx) {
                     return [3 /*break*/, 4];
                 case 4:
                     if (!shareId) {
-                        return [2 /*return*/, ctx.reply("Hello ".concat(user.first_name, "!\n Use : \n /d drama name :for dramas    \n/m movie name : for movies    \n"), {
+                        return [2 /*return*/, ctx.reply("Hello ".concat(user.first_name, "!\n Use : \n send A drama name \nNote: first Google the spelling \n"), {
                                 reply_to_message_id: ctx.message.message_id,
                                 parse_mode: "HTML",
                                 reply_markup: {

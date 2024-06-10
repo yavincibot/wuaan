@@ -196,7 +196,7 @@ var Telegram = /** @class */ (function () {
                         rawButtons = _b.sent();
                         forceChatButtons = splitArray(rawButtons, limitPerRow);
                         forceChatButtons.push([
-                            Markup.button.url("You need to join this first", "https://t.me/".concat((_a = this.app.botInfo) === null || _a === void 0 ? void 0 : _a.username, "?start=").concat(shareId)),
+                            Markup.button.url("You need to join this first", "https://t.me/".concat((_a = this.app.botInfo) === null || _a === void 0 ? void 0 : _a.username, "?start=").concat(shareId, "-eng")),
                         ]);
                         return [2 /*return*/, {
                                 inline_keyboard: forceChatButtons,
@@ -277,7 +277,13 @@ var Telegram = /** @class */ (function () {
                     case 15:
                         i++;
                         return [3 /*break*/, 1];
-                    case 16: return [2 /*return*/, resultIds];
+                    case 16:
+                        if (!deleteOrNot) return [3 /*break*/, 18];
+                        return [4 /*yield*/, this.app.telegram.sendMessage(toChatId, "I will delete the above files in 5 minutes, so forward them to another chat.")];
+                    case 17:
+                        _a.sent();
+                        _a.label = 18;
+                    case 18: return [2 /*return*/, resultIds];
                 }
             });
         });
