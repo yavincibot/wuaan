@@ -122,31 +122,43 @@ var MongoDB = /** @class */ (function () {
     };
     MongoDB.prototype.searchAIO = function (criteria) {
         return __awaiter(this, void 0, void 0, function () {
-            var regexOptions, query, results, err_1;
+            var keywords, regexPattern, specialQuery, regexOptions, query, results, err_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        if (!criteria.aIOTitle || criteria.aIOTitle.length < 2) {
+                            console.log("Please provide a valid search criteria.");
+                            return [2 /*return*/, undefined];
+                        }
+                        keywords = criteria.aIOTitle
+                            .replace(/[^\w\s]/gi, " ")
+                            .replace(/\s+/g, " ")
+                            .split(" ")
+                            .map(function (keyword) { return "(?=.*".concat(keyword, ")"); })
+                            .join("");
+                        regexPattern = new RegExp("^".concat(keywords), "i");
+                        specialQuery = {
+                            aIOTitle: { $regex: regexPattern },
+                        };
                         regexOptions = { $regex: new RegExp(criteria.aIOTitle || "", "i") };
-                        query = {};
-                        if (criteria.aIOTitle && criteria.aIOTitle.length >= 2) {
-                            query.aIOTitle = regexOptions;
-                        }
-                        else {
-                            query.aIOTitle = undefined;
-                        }
+                        query = { aIOTitle: regexOptions };
                         _a.label = 1;
                     case 1:
-                        _a.trys.push([1, 3, , 4]);
+                        _a.trys.push([1, 5, , 6]);
                         return [4 /*yield*/, this.AIOModel.find(query)];
                     case 2:
                         results = _a.sent();
-                        console.log("Search Result:", results);
-                        return [2 /*return*/, results];
+                        if (!(results.length === 0)) return [3 /*break*/, 4];
+                        return [4 /*yield*/, this.AIOModel.find(specialQuery)];
                     case 3:
+                        results = _a.sent();
+                        _a.label = 4;
+                    case 4: return [2 /*return*/, results];
+                    case 5:
                         err_1 = _a.sent();
                         console.error("Error executing the query:", err_1);
                         return [2 /*return*/, undefined];
-                    case 4: return [2 /*return*/];
+                    case 6: return [2 /*return*/];
                 }
             });
         });
