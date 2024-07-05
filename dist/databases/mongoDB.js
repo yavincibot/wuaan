@@ -140,7 +140,9 @@ var MongoDB = /** @class */ (function () {
                         specialQuery = {
                             aIOTitle: { $regex: regexPattern },
                         };
-                        regexOptions = { $regex: new RegExp(criteria.aIOTitle || "", "i") };
+                        regexOptions = {
+                            $regex: new RegExp(criteria.aIOTitle.replace(/[^\w\s]/gi, " ") || "", "i"),
+                        };
                         query = { aIOTitle: regexOptions };
                         _a.label = 1;
                     case 1:
