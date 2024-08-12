@@ -122,16 +122,16 @@ var MongoDB = /** @class */ (function () {
     };
     MongoDB.prototype.searchAIO = function (criteria) {
         return __awaiter(this, void 0, void 0, function () {
-            var normalizedTitle, first20Chars, query, specialQuery, keywords, regexPattern, results, err_1;
+            var normalizedTitle, first20Chars, query, specialQuery, keywords, regexPattern, results, fallbackQuery, err_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (!criteria.aIOTitle || criteria.aIOTitle.length < 2) {
+                        if (!criteria.aIOTitle || criteria.aIOTitle.length < 3) {
                             console.log("Please provide a valid search criteria.");
                             return [2 /*return*/, undefined];
                         }
                         normalizedTitle = criteria.aIOTitle;
-                        first20Chars = normalizedTitle.slice(0, 20);
+                        first20Chars = normalizedTitle.slice(0, 30);
                         query = {
                             aIOTitle: { $regex: new RegExp(first20Chars, "i") },
                         };
@@ -149,21 +149,30 @@ var MongoDB = /** @class */ (function () {
                         }
                         _a.label = 1;
                     case 1:
-                        _a.trys.push([1, 5, , 6]);
-                        return [4 /*yield*/, this.AIOModel.find(query)];
+                        _a.trys.push([1, 7, , 8]);
+                        return [4 /*yield*/, this.AIOModel.find(query).limit(10)];
                     case 2:
                         results = _a.sent();
                         if (!(results.length === 0 && Object.keys(specialQuery).length > 0)) return [3 /*break*/, 4];
-                        return [4 /*yield*/, this.AIOModel.find(specialQuery)];
+                        return [4 /*yield*/, this.AIOModel.find(specialQuery).limit(10)];
                     case 3:
                         results = _a.sent();
                         _a.label = 4;
-                    case 4: return [2 /*return*/, results];
+                    case 4:
+                        if (!(results.length === 0)) return [3 /*break*/, 6];
+                        fallbackQuery = {
+                            aIOTitle: { $regex: new RegExp(normalizedTitle.slice(-15), "i") },
+                        };
+                        return [4 /*yield*/, this.AIOModel.find(fallbackQuery).limit(10)];
                     case 5:
+                        results = _a.sent();
+                        _a.label = 6;
+                    case 6: return [2 /*return*/, results];
+                    case 7:
                         err_1 = _a.sent();
                         console.error("Error executing the query:", err_1);
                         return [2 /*return*/, undefined];
-                    case 6: return [2 /*return*/];
+                    case 8: return [2 /*return*/];
                 }
             });
         });

@@ -52,9 +52,7 @@ var paginationWizard = new Scenes.WizardScene("reqAIO", Composer.on("message", f
                 if (!("text" in ctx.message)) return [3 /*break*/, 7];
                 ctx.session.page = 0;
                 request = ctx.message.text.replace("/eng", "").trim();
-                if (!(!reservedWordList.includes(request.toLocaleLowerCase()) &&
-                    request.length > 2 &&
-                    request.length < 30)) return [3 /*break*/, 5];
+                if (!(!reservedWordList.includes(request.toLocaleLowerCase()) && request.length > 2)) return [3 /*break*/, 5];
                 searchCriteria = {
                     aIOTitle: cleanString(request.toLocaleLowerCase()),
                 };
