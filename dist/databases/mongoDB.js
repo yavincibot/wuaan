@@ -122,7 +122,7 @@ var MongoDB = /** @class */ (function () {
     };
     MongoDB.prototype.searchAIO = function (criteria) {
         return __awaiter(this, void 0, void 0, function () {
-            var keywords, regexPattern, specialQuery, regexOptions, query, results, err_1;
+            var normalizedTitle, first20Chars, query, specialQuery, keywords, regexPattern, results, err_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -130,27 +130,30 @@ var MongoDB = /** @class */ (function () {
                             console.log("Please provide a valid search criteria.");
                             return [2 /*return*/, undefined];
                         }
-                        keywords = criteria.aIOTitle
-                            .replace(/[^\w\s]/gi, " ")
-                            .replace(/\s+/g, " ")
-                            .split(" ")
-                            .map(function (keyword) { return "(?=.*".concat(keyword, ")"); })
-                            .join("");
-                        regexPattern = new RegExp("^".concat(keywords), "i");
-                        specialQuery = {
-                            aIOTitle: { $regex: regexPattern },
+                        normalizedTitle = criteria.aIOTitle;
+                        first20Chars = normalizedTitle.slice(0, 20);
+                        query = {
+                            aIOTitle: { $regex: new RegExp(first20Chars, "i") },
                         };
-                        regexOptions = {
-                            $regex: new RegExp(criteria.aIOTitle.replace(/[^\w\s]/gi, " ") || "", "i"),
-                        };
-                        query = { aIOTitle: regexOptions };
+                        specialQuery = {};
+                        if (first20Chars.length > 4) {
+                            keywords = first20Chars
+                                .replace(/\s+/g, " ")
+                                .split(" ")
+                                .map(function (keyword) { return "(?=.*".concat(keyword, ")"); })
+                                .join("");
+                            regexPattern = new RegExp("^".concat(keywords), "i");
+                            specialQuery = {
+                                aIOTitle: { $regex: regexPattern },
+                            };
+                        }
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 5, , 6]);
                         return [4 /*yield*/, this.AIOModel.find(query)];
                     case 2:
                         results = _a.sent();
-                        if (!(results.length === 0)) return [3 /*break*/, 4];
+                        if (!(results.length === 0 && Object.keys(specialQuery).length > 0)) return [3 /*break*/, 4];
                         return [4 /*yield*/, this.AIOModel.find(specialQuery)];
                     case 3:
                         results = _a.sent();

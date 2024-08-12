@@ -38,11 +38,17 @@ import { thankReply } from "../../utils/markupButton/permanantButton/lists.js";
 import env from "../../services/env.js";
 export default function reqAIOHandler(ctx, next) {
     return __awaiter(this, void 0, void 0, function () {
+        var text;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     if (!(ctx.message && "text" in ctx.message)) return [3 /*break*/, 3];
-                    if (!!/^\/(start|d|m|a)/i.test(ctx.message.text)) return [3 /*break*/, 2];
+                    text = ctx.message.text;
+                    if (!(!/^\/(start|d|m|a)/i.test(ctx.message.text) &&
+                        !ctx.message.reply_to_message &&
+                        !text.includes("@") &&
+                        text.length > 4 &&
+                        !containsEmoji(text))) return [3 /*break*/, 2];
                     return [4 /*yield*/, ctx.scene.enter("reqAIO")];
                 case 1:
                     _a.sent();
@@ -59,3 +65,7 @@ export default function reqAIOHandler(ctx, next) {
         });
     });
 }
+var containsEmoji = function (str) {
+    var emojiPattern = /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/gi;
+    return emojiPattern.test(str);
+};

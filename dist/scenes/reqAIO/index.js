@@ -42,6 +42,7 @@ import getRandomId from "../../extra/getRandomId.js";
 import { sendCallbackQueryResponse } from "./answerCbQUery.js";
 import { makeButtons } from "../../utils/markupButton/permanantButton/keyboard.js";
 import { reservedWordList } from "../../utils/markupButton/permanantButton/lists.js";
+import { cleanString } from "./cleanReq";
 // Create a Wizard Scene
 var paginationWizard = new Scenes.WizardScene("reqAIO", Composer.on("message", function (ctx) { return __awaiter(void 0, void 0, void 0, function () {
     var request, searchCriteria, finalResult, random, photo;
@@ -55,7 +56,7 @@ var paginationWizard = new Scenes.WizardScene("reqAIO", Composer.on("message", f
                     request.length > 2 &&
                     request.length < 30)) return [3 /*break*/, 5];
                 searchCriteria = {
-                    aIOTitle: request,
+                    aIOTitle: cleanString(request.toLocaleLowerCase()),
                 };
                 return [4 /*yield*/, database.searchAIO(searchCriteria)];
             case 1:
