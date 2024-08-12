@@ -161,7 +161,7 @@ var MongoDB = /** @class */ (function () {
                     case 4:
                         if (!(results.length === 0)) return [3 /*break*/, 6];
                         fallbackQuery = {
-                            aIOTitle: { $regex: new RegExp(normalizedTitle.slice(-15), "i") },
+                            aIOTitle: { $regex: new RegExp(normalizedTitle.slice(0, 15), "i") },
                         };
                         return [4 /*yield*/, this.AIOModel.find(fallbackQuery).limit(10)];
                     case 5:
