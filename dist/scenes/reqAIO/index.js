@@ -42,7 +42,7 @@ import getRandomId from "../../extra/getRandomId.js";
 import { sendCallbackQueryResponse } from "./answerCbQUery.js";
 import { makeButtons } from "../../utils/markupButton/permanantButton/keyboard.js";
 import { reservedWordList } from "../../utils/markupButton/permanantButton/lists.js";
-import { cleanString } from "./cleanReq";
+import { cleanString } from "./cleanReq.js";
 // Create a Wizard Scene
 var paginationWizard = new Scenes.WizardScene("reqAIO", Composer.on("message", function (ctx) { return __awaiter(void 0, void 0, void 0, function () {
     var request, searchCriteria, finalResult, random, photo;
