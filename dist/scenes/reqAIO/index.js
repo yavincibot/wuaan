@@ -77,7 +77,7 @@ var paginationWizard = new Scenes.WizardScene("reqAIO", Composer.on("message", f
                         var messageIdToDelete = sentMessage.message_id;
                         setTimeout(function () {
                             ctx.deleteMessage(messageIdToDelete);
-                        }, 5 * 60 * 60 * 1000);
+                        }, 10 * 60 * 60 * 1000);
                     })];
             case 2:
                 _a.sent();

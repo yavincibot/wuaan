@@ -62,26 +62,33 @@ var Telegram = /** @class */ (function () {
     }
     Telegram.prototype.initialize = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var forceChatIds;
+            var _a, forceChatIds;
             var _this = this;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.app.telegram.setMyCommands([
-                            {
-                                command: "start",
-                                description: "start bot",
-                            },
-                            {
-                                command: "addaio",
-                                description: "Admin Command",
-                            },
-                            {
-                                command: "editaio",
-                                description: "Admin Command",
-                            },
-                        ])];
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _b.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.app.telegram.setMyCommands([
+                                {
+                                    command: "start",
+                                    description: "start bot",
+                                },
+                                {
+                                    command: "addaio",
+                                    description: "Admin Command",
+                                },
+                                {
+                                    command: "editaio",
+                                    description: "Admin Command",
+                                },
+                            ])];
                     case 1:
-                        _a.sent();
+                        _b.sent();
+                        return [3 /*break*/, 3];
+                    case 2:
+                        _a = _b.sent();
+                        return [3 /*break*/, 3];
+                    case 3:
                         forceChatIds = __spreadArray([], env.forceGroupIds, true);
                         return [4 /*yield*/, mapAsync(forceChatIds, function (chatId) { return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_a) {
                                 switch (_a.label) {
@@ -89,8 +96,8 @@ var Telegram = /** @class */ (function () {
                                     case 1: return [2 /*return*/, _a.sent()];
                                 }
                             }); }); })];
-                    case 2:
-                        _a.sent();
+                    case 4:
+                        _b.sent();
                         return [2 /*return*/];
                 }
             });
