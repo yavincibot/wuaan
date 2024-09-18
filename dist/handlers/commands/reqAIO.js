@@ -42,7 +42,7 @@ export default function reqAIOHandler(ctx, next) {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    if (!(ctx.message && "text" in ctx.message)) return [3 /*break*/, 3];
+                    if (!(ctx.message && "text" in ctx.message)) return [3 /*break*/, 4];
                     text = ctx.message.text;
                     if (!(!/^\/(start|d|m|a)/i.test(ctx.message.text) &&
                         !ctx.message.reply_to_message &&
@@ -54,11 +54,19 @@ export default function reqAIOHandler(ctx, next) {
                     _a.sent();
                     _a.label = 2;
                 case 2:
-                    if (thankReply(ctx.message.text)) {
-                        ctx.reply("If you really want to thank me so add two members for me\nhere my official Channel for updates and backup ".concat("@" + env.join));
-                    }
-                    _a.label = 3;
+                    if (!thankReply(ctx.message.text)) return [3 /*break*/, 4];
+                    return [4 /*yield*/, ctx
+                            .reply("If you really want to thank me so add two members for me\nhere my official Channel for updates and backup ".concat("@" + env.join))
+                            .then(function (sentMessage) {
+                            var messageIdToDelete = sentMessage.message_id;
+                            setTimeout(function () {
+                                ctx.deleteMessage(messageIdToDelete);
+                            }, 1 * 60 * 60 * 1000);
+                        })];
                 case 3:
+                    _a.sent();
+                    _a.label = 4;
+                case 4:
                     next();
                     return [2 /*return*/];
             }

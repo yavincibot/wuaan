@@ -66,11 +66,25 @@ var editDeleteWizard = new Scenes.WizardScene("editAIO", Composer.on("message", 
                 ctx.session.aIOData = finalResult;
                 if (!(finalResult && finalResult.length > 0)) return [3 /*break*/, 3];
                 photo = finalResult[0].aIOPosterID;
-                return [4 /*yield*/, ctx.replyWithPhoto(photo, {
+                return [4 /*yield*/, ctx
+                        .replyWithPhoto(photo, {
                         caption: "```Json\n{".concat(makeAIOCaption(finalResult[0]), "}\n```"),
                         reply_markup: keyboard.makeAdminButtons("https://t.me/".concat(env.botUserName, "?start=").concat(finalResult[0].shareId, "-a"), ctx.session.next || "", ctx.session.prev || ""),
                         parse_mode: "MarkdownV2",
                         reply_to_message_id: ctx.message.message_id,
+                    })
+                        .then(function (sentMessage) {
+                        var messageIdToDelete = sentMessage.message_id;
+                        setTimeout(function () { return __awaiter(void 0, void 0, void 0, function () {
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0: return [4 /*yield*/, ctx.deleteMessage(messageIdToDelete)];
+                                    case 1:
+                                        _a.sent();
+                                        return [2 /*return*/];
+                                }
+                            });
+                        }); }, 5 * 60 * 60 * 1000);
                     })];
             case 2:
                 _a.sent();

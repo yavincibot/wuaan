@@ -49,10 +49,10 @@ var paginationWizard = new Scenes.WizardScene("reqAIO", Composer.on("message", f
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                if (!("text" in ctx.message)) return [3 /*break*/, 7];
+                if (!("text" in ctx.message)) return [3 /*break*/, 8];
                 ctx.session.page = 0;
                 request = ctx.message.text.replace("/eng", "").trim();
-                if (!(!reservedWordList.includes(request.toLocaleLowerCase()) && request.length > 2)) return [3 /*break*/, 5];
+                if (!(!reservedWordList.includes(request.toLocaleLowerCase()) && request.length > 2)) return [3 /*break*/, 6];
                 searchCriteria = {
                     aIOTitle: cleanString(request.toLocaleLowerCase()),
                 };
@@ -75,29 +75,36 @@ var paginationWizard = new Scenes.WizardScene("reqAIO", Composer.on("message", f
                     })
                         .then(function (sentMessage) {
                         var messageIdToDelete = sentMessage.message_id;
-                        setTimeout(function () {
-                            ctx.deleteMessage(messageIdToDelete);
-                        }, 10 * 60 * 60 * 1000);
+                        setTimeout(function () { return __awaiter(void 0, void 0, void 0, function () {
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0: return [4 /*yield*/, ctx.deleteMessage(messageIdToDelete)];
+                                    case 1:
+                                        _a.sent();
+                                        return [2 /*return*/];
+                                }
+                            });
+                        }); }, 6 * 60 * 60 * 1000);
                     })];
             case 2:
                 _a.sent();
                 if (finalResult.length > 1) {
                     return [2 /*return*/, ctx.wizard.next()];
                 }
-                return [3 /*break*/, 4];
-            case 3:
-                // await ctx.reply(`${ctx.from.first_name} your ${request} not found `);
-                ctx.scene.leave;
-                _a.label = 4;
-            case 4: return [2 /*return*/, ctx.wizard.next()];
-            case 5: 
+                return [3 /*break*/, 5];
+            case 3: return [4 /*yield*/, ctx.scene.leave()];
+            case 4:
+                _a.sent();
+                _a.label = 5;
+            case 5: return [2 /*return*/, ctx.wizard.next()];
+            case 6: 
             // await ctx.reply(`${ctx.from.first_name} your ${request} is reserved `);
             return [4 /*yield*/, ctx.scene.leave()];
-            case 6:
+            case 7:
                 // await ctx.reply(`${ctx.from.first_name} your ${request} is reserved `);
                 _a.sent();
-                _a.label = 7;
-            case 7: return [2 /*return*/];
+                _a.label = 8;
+            case 8: return [2 /*return*/];
         }
     });
 }); }), Composer.on("callback_query", function (ctx) { return __awaiter(void 0, void 0, void 0, function () {
