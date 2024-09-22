@@ -74,17 +74,20 @@ var paginationWizard = new Scenes.WizardScene("reqAIO", Composer.on("message", f
                         reply_to_message_id: ctx.message.message_id,
                     })
                         .then(function (sentMessage) {
-                        var messageIdToDelete = sentMessage.message_id;
-                        setTimeout(function () { return __awaiter(void 0, void 0, void 0, function () {
-                            return __generator(this, function (_a) {
-                                switch (_a.label) {
-                                    case 0: return [4 /*yield*/, ctx.deleteMessage(messageIdToDelete)];
-                                    case 1:
-                                        _a.sent();
-                                        return [2 /*return*/];
-                                }
-                            });
-                        }); }, 6 * 60 * 60 * 1000);
+                        try {
+                            var messageIdToDelete_1 = sentMessage.message_id;
+                            setTimeout(function () { return __awaiter(void 0, void 0, void 0, function () {
+                                return __generator(this, function (_a) {
+                                    switch (_a.label) {
+                                        case 0: return [4 /*yield*/, ctx.deleteMessage(messageIdToDelete_1)];
+                                        case 1:
+                                            _a.sent();
+                                            return [2 /*return*/];
+                                    }
+                                });
+                            }); }, 15 * 60 * 1000);
+                        }
+                        catch (_a) { }
                     })];
             case 2:
                 _a.sent();
