@@ -117,7 +117,6 @@ var paginationWizard = new Scenes.WizardScene("reqAIO", Composer.on("message", f
                 return [3 /*break*/, 8];
             case 7:
                 error_1 = _a.sent();
-                console.log(error_1);
                 return [3 /*break*/, 8];
             case 8:
                 if (finalResult.length > 1) {
