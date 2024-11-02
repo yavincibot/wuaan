@@ -30,18 +30,34 @@ export var makeButtons = function (link, next, prev) {
         inline_keyboard: [
             [
                 { text: "⬅️ Prev", callback_data: prev },
-                { text: "Download", url: link },
                 { text: "Next ➡️", callback_data: next },
             ],
-            [{ text: "❣️❣️ Join K anime Love ❣️❣️", url: "https://t.me/".concat(env.join) }],
+            [{ text: "DOWNLOAD", url: link }],
+            [{ text: "❣️❣️ Join Back-UP ❣️❣️", url: "".concat(env.backup) }],
+            [{ text: "❣️❣️ How to Download ❣️❣️", url: "https://t.me/Infinite_tips/17" }],
         ],
+    };
+};
+export var makeInviteButtons = function (link, totalInvites, next, prev) {
+    var totalInvitesNumber = parseInt(totalInvites, 10); // Convert to number for comparison
+    var inlineKeyboard = [];
+    if (totalInvitesNumber > 40) {
+        inlineKeyboard.push([
+            { text: "⬅️ Prev", callback_data: prev },
+            { text: "Next ➡️", callback_data: next },
+        ]);
+    }
+    inlineKeyboard.push([{ text: "Total invites: ".concat(totalInvites), callback_data: totalInvites }], [{ text: "Increase Daily Requests", url: link }]);
+    return {
+        inline_keyboard: inlineKeyboard,
     };
 };
 export var makeCollectionButton = function (link) {
     return {
         inline_keyboard: [
             [{ text: "Download", url: link }],
-            [{ text: "❣️❣️Must Join KDL ❣️❣️", url: "https://t.me/".concat(env.join) }],
+            [{ text: "Join Back-Up", url: env.backup }],
+            [{ text: "❣️❣️ How to Download ❣️❣️", url: "https://t.me/Infinite_tips/17" }],
         ],
     };
 };

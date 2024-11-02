@@ -48,9 +48,13 @@ app.use(stage.middleware());
 app.use(filters.private);
 app.use(commands.reqAIOHandler);
 app.command("start", commands.startHandler);
-app.command("eng", commands.reqAIOHandler);
-app.command("addaio", commands.addAIOHandler);
-app.command("editaio", commands.editAIOHandler);
+app.command("myinvites", commands.invitesHandler);
+app.command("totalusers", commands.totalUsersHandler);
+app.command("broadcast", commands.myBroadcastHandler);
+app.command("add", commands.addAIOHandler);
+app.command("addh", commands.addAIOHandler);
+app.command("addong", commands.addOngoingHandler);
+app.command("edit", commands.editAIOHandler);
 app.catch(function (err, ctx) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         console.error("Error in ".concat(ctx.updateType), err);
@@ -79,6 +83,10 @@ function main() {
                     server = express();
                     server.get("/check", function (req, res) {
                         res.sendStatus(200);
+                        // setInterval(() => {
+                        //   sendRequest();
+                        // }, 5 * 60 * 1000);
+                        // res.send("working server!");
                     });
                     port_1 = env.port;
                     _b = (_a = server).use;

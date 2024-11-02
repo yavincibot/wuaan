@@ -80,11 +80,45 @@ var Database = /** @class */ (function () {
             });
         });
     };
+    Database.prototype.saveOngoing = function (ongoingDocument) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.client.saveOngoing(ongoingDocument)];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/, ongoingDocument.shareId];
+                }
+            });
+        });
+    };
+    Database.prototype.saveHindiDrama = function (aIODocument) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.client.saveHindiDrama(aIODocument)];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/, aIODocument.shareId];
+                }
+            });
+        });
+    };
     Database.prototype.searchAIO = function (searchCriteria) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.client.searchAIO(searchCriteria)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    Database.prototype.searchHindiDrama = function (searchCriteria) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.client.searchHindiDrama(searchCriteria)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });
@@ -97,10 +131,67 @@ var Database = /** @class */ (function () {
             });
         });
     };
+    Database.prototype.getOngoingMessages = function (shareId) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.client.getOngoingMessages(shareId)];
+            });
+        });
+    };
+    Database.prototype.getHindiMessages = function (shareId) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.client.getHindiMessages(shareId)];
+            });
+        });
+    };
+    Database.prototype.saveSort = function (sortDocument) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.client.saveSort(sortDocument)];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/, sortDocument];
+                }
+            });
+        });
+    };
+    Database.prototype.removeFirstItem = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.client.removeFirstItem()];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
     Database.prototype.saveUser = function (user) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 return [2 /*return*/, this.client.saveUser(user)];
+            });
+        });
+    };
+    Database.prototype.getAllUserIds = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.client.getAllUserIds()];
+            });
+        });
+    };
+    Database.prototype.isUserExist = function (user) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.client.isUserExist(user)];
+            });
+        });
+    };
+    Database.prototype.countUsers = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.client.countUsers()];
             });
         });
     };
@@ -129,6 +220,51 @@ var Database = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 return [2 /*return*/, this.client.updateAIOAttribute(shareId, attribute)];
+            });
+        });
+    };
+    //invite
+    Database.prototype.addInvite = function (userId, invitedUsername, invitedUserId) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.client.addInvite(userId, invitedUsername, invitedUserId)];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    Database.prototype.getInviteUser = function (userId) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.client.getInviteUser(userId)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    Database.prototype.canRequest = function (userId) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.client.canRequest(userId)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    Database.prototype.useRequest = function (userId) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.client.useRequest(userId)];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
             });
         });
     };

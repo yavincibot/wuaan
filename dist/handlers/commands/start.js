@@ -35,65 +35,102 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 import auth from "../../services/auth.js";
-import database, { reqDB } from "../../services/database.js";
+import database from "../../services/database.js";
 import env from "../../services/env.js";
 import telegram from "../../services/telegram.js";
 export default function startHandler(ctx) {
+    var _a;
     return __awaiter(this, void 0, void 0, function () {
-        var chatId, payload, shareId, parts, user, userId, _a, chatsUserHasNotJoined, messageIds, channel;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
+        var chatId, user, userId, payload, shareId, inviteParts, inviterId, userId_1, isUserExist, parts, chatsUserHasNotJoined, messageIds, channel, canRequest, error_1, _b, error_2;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
                 case 0:
                     chatId = ctx.chat.id;
-                    payload = ctx.message.text.split(" ")[1];
-                    shareId = undefined;
-                    if (payload) {
-                        parts = payload.split("-");
-                        if (parts.length > 0) {
-                            shareId = Number(parts[0]);
-                        }
-                    }
                     user = ctx.from;
                     userId = user.id;
-                    0;
-                    _b.label = 1;
+                    payload = ctx.message.text.split(" ")[1];
+                    shareId = undefined;
+                    _c.label = 1;
                 case 1:
-                    _b.trys.push([1, 3, , 4]);
-                    return [4 /*yield*/, database.saveUser(user)];
+                    _c.trys.push([1, 28, , 29]);
+                    if (!payload) return [3 /*break*/, 7];
+                    inviteParts = payload.split("-");
+                    if (!(payload.includes("invite") && inviteParts.length > 1)) return [3 /*break*/, 6];
+                    inviterId = inviteParts[1];
+                    userId_1 = (_a = ctx.from) === null || _a === void 0 ? void 0 : _a.id.toString();
+                    if (!(userId_1 && inviterId && userId_1 !== inviterId)) return [3 /*break*/, 5];
+                    return [4 /*yield*/, database.isUserExist(userId_1)];
                 case 2:
-                    _b.sent();
-                    return [3 /*break*/, 4];
+                    isUserExist = _c.sent();
+                    if (!!isUserExist) return [3 /*break*/, 5];
+                    return [4 /*yield*/, addInviteUser(inviterId, userId_1, user.username || "null")];
                 case 3:
-                    _a = _b.sent();
-                    return [3 /*break*/, 4];
+                    _c.sent();
+                    return [4 /*yield*/, ctx.reply("Welcome! You were invited by a user with ID ".concat(inviterId, ".\nJoin our main channel for unlimited movies, dramas, and more. Stay updated with the latest releases and exclusive content.\n\nClick the link to join and start enjoying now!\nhttps://t.me/drama_think\n"))];
                 case 4:
+                    _c.sent();
+                    _c.label = 5;
+                case 5: return [3 /*break*/, 7];
+                case 6:
+                    parts = payload.split("-");
+                    if (parts.length > 0) {
+                        shareId = Number(parts[0]);
+                    }
+                    _c.label = 7;
+                case 7:
                     if (!shareId) {
-                        return [2 /*return*/, ctx.reply("Hello ".concat(user.first_name, "!\n Use : \n send A drama name \nNote: first Google the spelling \n"), {
+                        return [2 /*return*/, ctx.reply("Hello ".concat(user.first_name, "!\n").concat(env.request, " \nInvite your friends your invite link is  \n ").concat(generateInviteLink(userId.toString(), false)), {
                                 reply_to_message_id: ctx.message.message_id,
                                 parse_mode: "HTML",
-                                reply_markup: {
-                                    inline_keyboard: [[{ text: "❣️❣️ Join ❣️❣️", url: "https://t.me/".concat(env.join) }]],
-                                },
                             })];
                     }
-                    if (!!auth.isAdmin(userId)) return [3 /*break*/, 6];
+                    if (!!auth.isAdmin(userId)) return [3 /*break*/, 9];
                     return [4 /*yield*/, telegram.getChatsUserHasNotJoined(userId)];
-                case 5:
-                    chatsUserHasNotJoined = _b.sent();
+                case 8:
+                    chatsUserHasNotJoined = _c.sent();
                     if (chatsUserHasNotJoined.length) {
                         return [2 /*return*/, telegram.sendForceJoinMessage(shareId, chatId, user, chatsUserHasNotJoined)];
                     }
-                    _b.label = 6;
-                case 6: return [4 /*yield*/, reqDB.hasReachedRequestLimit(userId.toString())];
-                case 7:
-                    if (!(!(_b.sent()) || env.adminIds.includes(userId))) return [3 /*break*/, 12];
-                    if (!payload.includes("eng")) return [3 /*break*/, 9];
-                    return [4 /*yield*/, database.getAIOMessages(Number(shareId))];
-                case 8:
-                    messageIds = _b.sent();
-                    channel = env.dbAIOChannelId; //for all in one
-                    _b.label = 9;
+                    _c.label = 9;
                 case 9:
+                    messageIds = void 0;
+                    channel = void 0;
+                    return [4 /*yield*/, database.canRequest(userId.toString())];
+                case 10:
+                    canRequest = _c.sent();
+                    if (!(canRequest || env.adminIds.includes(userId))) return [3 /*break*/, 26];
+                    _c.label = 11;
+                case 11:
+                    _c.trys.push([11, 13, , 14]);
+                    return [4 /*yield*/, database.useRequest(userId.toString())];
+                case 12:
+                    _c.sent();
+                    return [3 /*break*/, 14];
+                case 13:
+                    error_1 = _c.sent();
+                    return [3 /*break*/, 14];
+                case 14:
+                    if (!payload.includes("eng")) return [3 /*break*/, 16];
+                    return [4 /*yield*/, database.getAIOMessages(Number(shareId))];
+                case 15:
+                    messageIds = _c.sent();
+                    channel = env.dbAIOChannelId;
+                    _c.label = 16;
+                case 16:
+                    if (!payload.includes("hindi")) return [3 /*break*/, 18];
+                    return [4 /*yield*/, database.getHindiMessages(Number(shareId))];
+                case 17:
+                    messageIds = _c.sent();
+                    channel = env.dbAIOChannelId;
+                    _c.label = 18;
+                case 18:
+                    if (!payload.includes("ong")) return [3 /*break*/, 20];
+                    return [4 /*yield*/, database.getOngoingMessages(Number(shareId))];
+                case 19:
+                    messageIds = _c.sent();
+                    channel = env.dbOngoingChannelId;
+                    _c.label = 20;
+                case 20:
                     if (!messageIds) {
                         return [2 /*return*/, ctx.reply("Message not found, try another link", {
                                 reply_to_message_id: ctx.message.message_id,
@@ -103,23 +140,59 @@ export default function startHandler(ctx) {
                         throw Error("There must be DB_CHANNEL_ID and DB_MOVIE_CHANNEL_ID");
                     }
                     return [4 /*yield*/, telegram.forwardMessages(chatId, channel, messageIds, true)];
-                case 10:
-                    _b.sent();
-                    return [4 /*yield*/, reqDB.saveRequestData(userId.toString())];
-                case 11:
-                    _b.sent();
-                    return [3 /*break*/, 13];
-                case 12: return [2 /*return*/, ctx.reply("Hello ".concat(user.first_name, "!\nIn 6 hour you can only 3 requests please wait for sometime to request again \n"), {
+                case 21:
+                    _c.sent();
+                    _c.label = 22;
+                case 22:
+                    _c.trys.push([22, 24, , 25]);
+                    return [4 /*yield*/, database.saveUser(user)];
+                case 23:
+                    _c.sent();
+                    return [3 /*break*/, 25];
+                case 24:
+                    _b = _c.sent();
+                    return [3 /*break*/, 25];
+                case 25: return [3 /*break*/, 27];
+                case 26: return [2 /*return*/, ctx.reply("Hello ".concat(user === null || user === void 0 ? void 0 : user.first_name, "!\n In 1 day, you can only make 5 request. Increase your limit by inviting users. \nIt will increase your request limit by per day per user by 1\n your invite link is: \"").concat(generateInviteLink(userId.toString(), false)), {
                         reply_to_message_id: ctx.message.message_id,
                         parse_mode: "HTML",
-                        reply_markup: {
-                            inline_keyboard: [
-                                [{ text: "❣️❣️Join KDL Official ❣️❣️", url: "https://t.me/".concat(env.join) }],
-                            ],
-                        },
+                        // reply_markup: {
+                        //   inline_keyboard: [
+                        //     [
+                        //       {
+                        //         text: "Join Main Channel",
+                        //         url: generateInviteLink(userId.toString(), true).trim().replace(" ",""),
+                        //       },
+                        //     ],
+                        //   ],
+                        // },
                     })];
-                case 13: return [2 /*return*/];
+                case 27: return [3 /*break*/, 29];
+                case 28:
+                    error_2 = _c.sent();
+                    console.log(error_2);
+                    return [3 /*break*/, 29];
+                case 29: return [2 /*return*/];
             }
         });
     });
 }
+export var generateInviteLink = function (userId, sharLink) {
+    if (sharLink) {
+        return "https://t.me/share/url?url=https://t.me/".concat(env.botUserName, "?start=invite-").concat(userId);
+        //
+    }
+    else {
+        return "https://t.me/".concat(env.botUserName, "?start=invite-").concat(userId);
+    }
+};
+var addInviteUser = function (inviterId, newUserId, username) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, database.addInvite(inviterId, newUserId, username)];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}); };

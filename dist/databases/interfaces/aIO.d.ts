@@ -9,4 +9,5 @@ export interface AIODocument {
     aIOTitle: string;
     aIOPosterID: string;
     episodes: Link[];
+    aioShortUrl: string;
 }

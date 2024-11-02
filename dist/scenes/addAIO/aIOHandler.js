@@ -39,9 +39,12 @@ import telegram from "../../services/telegram.js";
 import env from "../../services/env.js";
 import database from "../../services/database.js";
 import getAIOdata from "./aIODocument.js";
-import { sendToCOllection } from "../../utils/sendToCollection.js";
+// import { editCaption } from "../../services/client.js";
+import { sendToCOllection, sendToLogGroup } from "../../utils/sendToCollection.js";
 import { delay } from "../../extra/delay.js";
 import getRandomId from "../../extra/getRandomId.js";
+import getUserLinkMessage from "../../utils/getUserLinkMessage.js";
+import { processCaptionForStore } from "../../utils/caption/editCaption.js";
 function askTitleAIO(ctx) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
@@ -50,15 +53,23 @@ function askTitleAIO(ctx) {
                     ctx.session.messageIds = [];
                     ctx.session.captions = [];
                     ctx.session.done = false;
+                    ctx.session.isHindi = false;
                     return [4 /*yield*/, ctx.reply("```note\n you can not delete anything \n until the last step from here \n after you can \n cancel anytime say``` /cancel", {
                             parse_mode: "MarkdownV2",
                         })];
                 case 1:
                     _a.sent();
-                    return [4 /*yield*/, ctx.reply("Send the AIO Title Caption ")];
+                    if (!(ctx.message && "text" in ctx.message && ctx.message.text === "/addh")) return [3 /*break*/, 3];
+                    ctx.session.isHindi = true;
+                    return [4 /*yield*/, ctx.reply("Send the title of the Hindi drama/movie along with the following details:\n\n- Original Name \n- Also Known As (if applicable) \n- Year \n- Rating \n- Cast (optional) \n- Directors (optional) \n- Genres \n- Episodes (if it\u2019s a drama) \n- Quality (can be 720p, 540p, 1080p, or 480p) \n- Language (must be Hindi; dual languages optional) \n- Synopsis (optional) \n- Subtitles (optional)\n for cancel say /cancel")];
                 case 2:
                     _a.sent();
-                    return [2 /*return*/, ctx.wizard.next()];
+                    return [3 /*break*/, 5];
+                case 3: return [4 /*yield*/, ctx.reply("Send the title of the Hindi drama/movie along with the following details:\n\n- Original Name\n- Also Known As (if applicable)\n- Year\n- Rating\n- Cast (optional)\n- Directors (optional) \n- Genres \n- Episodes (if it\u2019s a drama) \n- Quality (can be 720p, 540p, 1080p, or 480p) \n- Language (must be Original; dual languages optional) \n- Synopsis (optional) \n- Subtitles (must be English Subtitles; dual Subtitles optional)\n for cancel say /cancel")];
+                case 4:
+                    _a.sent();
+                    _a.label = 5;
+                case 5: return [2 /*return*/, ctx.wizard.next()];
             }
         });
     });
@@ -117,82 +128,142 @@ function handlePosterAskRelatedMsg(ctx) {
     });
 }
 function done(ctx) {
-    var _a, _b, _c, _d, _e;
+    var _a, _b, _c, _d, _e, _f, _g;
     return __awaiter(this, void 0, void 0, function () {
-        var text, _f, backupChannel, messageIds, aIOPosterID, captions, aIOTitle, photoUrl, AIODetails, AIODetailsString, forwardedMessageIds, AIOData, shareId, botUsername, link, caption;
-        return __generator(this, function (_g) {
-            switch (_g.label) {
+        var text, _h, backupChannel, messageIds, aIOPosterID, captions, aIOTitle, photoUrl, AIODetails, forwardedMessageIds, AIOData, shareId, link, botUsername, _j, _k, user, _l, error_1, caption;
+        return __generator(this, function (_m) {
+            switch (_m.label) {
                 case 0:
                     if (!(ctx.message && "text" in ctx.message && ctx.message.text === "/cancel")) return [3 /*break*/, 3];
                     return [4 /*yield*/, ctx.reply("Share AIO Canceled start again /addaio")];
                 case 1:
-                    _g.sent();
+                    _m.sent();
                     return [4 /*yield*/, ctx.scene.leave()];
-                case 2: return [2 /*return*/, _g.sent()];
+                case 2: return [2 /*return*/, _m.sent()];
                 case 3:
-                    if (!ctx.message) return [3 /*break*/, 13];
+                    if (!ctx.message) return [3 /*break*/, 30];
                     text = "text" in ctx.message ? ctx.message.text : "";
-                    if (!(text.toLowerCase() === "done" && !ctx.session.done)) return [3 /*break*/, 11];
-                    _f = ctx.session, backupChannel = _f.backupChannel, messageIds = _f.messageIds, aIOPosterID = _f.aIOPosterID, captions = _f.captions;
+                    if (!(text.toLowerCase() === "done" && !ctx.session.done)) return [3 /*break*/, 28];
+                    _h = ctx.session, backupChannel = _h.backupChannel, messageIds = _h.messageIds, aIOPosterID = _h.aIOPosterID, captions = _h.captions;
                     aIOTitle = ctx.session.aIOTitle;
                     return [4 /*yield*/, getPhotoUrl(aIOPosterID)];
                 case 4:
-                    photoUrl = _g.sent();
+                    photoUrl = _m.sent();
                     AIODetails = {
                         aIOTitle: aIOTitle,
                         backupChannel: backupChannel,
                         messageIds: messageIds,
                         aIOPosterID: photoUrl,
+                        captions: captions,
                     };
-                    AIODetailsString = JSON.stringify(AIODetails, null, 2);
-                    return [4 /*yield*/, ctx.reply("```AIO details and file received.\n".concat(AIODetailsString, " \uD83C\uDF89```"), {
+                    return [4 /*yield*/, ctx.reply("```AIO details and file received.\n".concat(AIODetails.aIOTitle, " \uD83C\uDF89```"), {
                             parse_mode: "MarkdownV2",
                         })];
                 case 5:
-                    _g.sent();
+                    _m.sent();
                     ctx.session.done = true;
                     return [4 /*yield*/, telegram.forwardMessages(env.dbAIOChannelId, (_a = ctx.chat) === null || _a === void 0 ? void 0 : _a.id, AIODetails.messageIds ? AIODetails.messageIds : [], false, captions)];
                 case 6:
-                    forwardedMessageIds = _g.sent();
-                    AIOData = getAIOdata(AIODetails, forwardedMessageIds);
-                    return [4 /*yield*/, database.saveAIO(AIOData)];
+                    forwardedMessageIds = _m.sent();
+                    _m.label = 7;
                 case 7:
-                    shareId = _g.sent();
-                    botUsername = ctx.botInfo.username;
-                    link = "https://t.me/".concat(botUsername, "?start=").concat(shareId, "-eng");
-                    return [4 /*yield*/, ctx.reply(link)];
+                    _m.trys.push([7, 25, , 27]);
+                    return [4 /*yield*/, getAIOdata(AIODetails, forwardedMessageIds)];
                 case 8:
-                    _g.sent();
-                    return [4 /*yield*/, sendToCOllection(env.collectionAIO, aIOPosterID, link, aIOTitle || "none")];
+                    AIOData = _m.sent();
+                    shareId = void 0;
+                    link = void 0;
+                    botUsername = ctx.botInfo.username;
+                    if (!ctx.session.isHindi) return [3 /*break*/, 12];
+                    if (!AIOData) return [3 /*break*/, 10];
+                    return [4 /*yield*/, database.saveHindiDrama(AIOData)];
                 case 9:
-                    _g.sent();
-                    return [4 /*yield*/, ctx.scene.leave()];
-                case 10: return [2 /*return*/, _g.sent()];
-                case 11: return [4 /*yield*/, ctx.reply("Send next file if Done Click Done ".concat((_b = ctx.session.messageIds) === null || _b === void 0 ? void 0 : _b.length), keyboard.oneTimeDoneKeyboard())];
+                    _j = _m.sent();
+                    return [3 /*break*/, 11];
+                case 10:
+                    _j = null;
+                    _m.label = 11;
+                case 11:
+                    shareId = _j;
+                    link = shareId ? "https://t.me/".concat(botUsername, "?start=").concat(shareId, "-hindi") : null;
+                    return [3 /*break*/, 16];
                 case 12:
-                    _g.sent();
-                    (_c = ctx.session.messageIds) === null || _c === void 0 ? void 0 : _c.push(ctx.message.message_id);
-                    caption = getRandomId().toString();
-                    if ("caption" in ctx.message) {
-                        caption = ctx.message.caption || "I_F";
-                        ctx.session.captions = ctx.session.captions || [];
-                        (_d = ctx.session.captions) === null || _d === void 0 ? void 0 : _d.push(caption);
+                    if (!AIOData) return [3 /*break*/, 14];
+                    return [4 /*yield*/, database.saveAIO(AIOData)];
+                case 13:
+                    _k = _m.sent();
+                    return [3 /*break*/, 15];
+                case 14:
+                    _k = null;
+                    _m.label = 15;
+                case 15:
+                    shareId = _k;
+                    link = shareId ? "https://t.me/".concat(botUsername, "?start=").concat(shareId, "-eng") : null;
+                    _m.label = 16;
+                case 16:
+                    if (!AIOData || !shareId || !link) {
+                        throw new Error("Failed to process the request ");
                     }
-                    else {
-                        caption = "I_F";
+                    return [4 /*yield*/, ctx.reply(link + " " + AIOData.aioShortUrl)];
+                case 17:
+                    _m.sent();
+                    return [4 /*yield*/, sendToCOllection(env.collectionAIO, aIOPosterID, link, aIOTitle || "none")];
+                case 18:
+                    _m.sent();
+                    return [4 /*yield*/, sendToCOllection(env.collectionAIOBackup, aIOPosterID, link, aIOTitle || "none")];
+                case 19:
+                    _m.sent();
+                    _m.label = 20;
+                case 20:
+                    _m.trys.push([20, 22, , 23]);
+                    user = {
+                        id: ctx.from.id,
+                        firstname: ctx.from.first_name,
+                        username: ctx.from.username,
+                    };
+                    return [4 /*yield*/, sendToLogGroup(env.logGroupId, getUserLinkMessage("".concat(processCaptionForStore(((_b = AIODetails.aIOTitle) === null || _b === void 0 ? void 0 : _b.slice(0, 40)) || "none"), " added by ..."), user))];
+                case 21:
+                    _m.sent();
+                    return [3 /*break*/, 23];
+                case 22:
+                    _l = _m.sent();
+                    return [3 /*break*/, 23];
+                case 23: return [4 /*yield*/, ctx.scene.leave()];
+                case 24: return [2 /*return*/, _m.sent()];
+                case 25:
+                    error_1 = _m.sent();
+                    return [4 /*yield*/, ctx.scene.leave()];
+                case 26: return [2 /*return*/, _m.sent()];
+                case 27: return [3 /*break*/, 30];
+                case 28: return [4 /*yield*/, ctx.reply("Send next file if Done Click Done ".concat((_c = ctx.session.messageIds) === null || _c === void 0 ? void 0 : _c.length), keyboard.oneTimeDoneKeyboard())];
+                case 29:
+                    _m.sent();
+                    (_d = ctx.session.messageIds) === null || _d === void 0 ? void 0 : _d.push(ctx.message.message_id);
+                    caption = getRandomId().toString();
+                    if ("document" in ctx.message && ctx.message.document.file_name) {
+                        caption = ctx.message.document.file_name;
                         ctx.session.captions = ctx.session.captions || [];
                         (_e = ctx.session.captions) === null || _e === void 0 ? void 0 : _e.push(caption);
                     }
-                    _g.label = 13;
-                case 13: return [2 /*return*/];
+                    else if ("caption" in ctx.message) {
+                        caption = ctx.message.caption || " ";
+                        ctx.session.captions = ctx.session.captions || [];
+                        (_f = ctx.session.captions) === null || _f === void 0 ? void 0 : _f.push(caption);
+                    }
+                    else {
+                        caption = "no caption";
+                        ctx.session.captions = ctx.session.captions || [];
+                        (_g = ctx.session.captions) === null || _g === void 0 ? void 0 : _g.push(caption);
+                    }
+                    _m.label = 30;
+                case 30: return [2 /*return*/];
             }
         });
     });
 }
-export { askTitleAIO, handleTitleAskPoster, done, handlePosterAskRelatedMsg };
 export function getPhotoUrl(photoId) {
     return __awaiter(this, void 0, void 0, function () {
-        var success, photo, result, error_1;
+        var success, photo, result, error_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -213,16 +284,16 @@ export function getPhotoUrl(photoId) {
                     success = true;
                     return [3 /*break*/, 10];
                 case 5:
-                    error_1 = _a.sent();
+                    error_2 = _a.sent();
                     success = false;
-                    if (!(error_1.code === 429)) return [3 /*break*/, 7];
-                    console.log("".concat(error_1));
+                    if (!(error_2.code === 429)) return [3 /*break*/, 7];
+                    console.log("".concat(error_2));
                     return [4 /*yield*/, delay(40000, 41000)];
                 case 6:
                     _a.sent();
                     return [3 /*break*/, 9];
                 case 7:
-                    console.log("".concat(error_1));
+                    console.log("".concat(error_2));
                     return [4 /*yield*/, delay(40000, 41000)];
                 case 8:
                     _a.sent();
@@ -234,3 +305,4 @@ export function getPhotoUrl(photoId) {
         });
     });
 }
+export { askTitleAIO, handleTitleAskPoster, done, handlePosterAskRelatedMsg };

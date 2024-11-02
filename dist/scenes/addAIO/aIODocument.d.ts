@@ -7,5 +7,5 @@ interface AIODetails {
     messageIds?: number[];
     aIOPosterID?: string;
 }
-export default function getDramadata(dramaDetails: AIODetails, messageIds: number[]): AIODocument;
+export default function getDramadata(dramaDetails: AIODetails, messageIds: number[]): Promise<AIODocument | null>;
 export {};

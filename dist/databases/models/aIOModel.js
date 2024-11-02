@@ -31,7 +31,12 @@ export var aioSchema = new Schema({
         type: String,
         required: true,
     },
+    aioShortUrl: {
+        type: String,
+        required: true,
+    },
     episodes: [linkSchema],
 }, { timestamps: true });
 var DramaModel = mongoose.model("aio", aioSchema);
+export var HindiDramaModel = mongoose.model("hindiDrama", aioSchema);
 export default DramaModel;

@@ -37,43 +37,71 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 import { thankReply } from "../../utils/markupButton/permanantButton/lists.js";
 import env from "../../services/env.js";
 export default function reqAIOHandler(ctx, next) {
+    var _a;
     return __awaiter(this, void 0, void 0, function () {
-        var text;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
+        var id, text, error_1;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
                 case 0:
-                    if (!(ctx.message && "text" in ctx.message)) return [3 /*break*/, 4];
+                    if (!(ctx.message && "text" in ctx.message)) return [3 /*break*/, 11];
+                    id = (_a = ctx.chat) === null || _a === void 0 ? void 0 : _a.id;
                     text = ctx.message.text;
-                    if (!(!/^\/(start|d|m|a)/i.test(ctx.message.text) &&
-                        !ctx.message.reply_to_message &&
-                        !text.includes("@") &&
-                        text.length > 4 &&
-                        !containsEmoji(text))) return [3 /*break*/, 2];
-                    return [4 /*yield*/, ctx.scene.enter("reqAIO")];
+                    _b.label = 1;
                 case 1:
-                    _a.sent();
-                    _a.label = 2;
+                    _b.trys.push([1, 10, , 11]);
+                    if (!(!/^\/(start|d|m|a)/i.test(text) && !/(?<!\S)[.!@#$%^&*()](?!\S)/.test(text))) return [3 /*break*/, 7];
+                    if (!(env.withoutCmd.includes(id) &&
+                        text.length > 4 &&
+                        !text.startsWith("/s") &&
+                        !text.startsWith("/h"))) return [3 /*break*/, 3];
+                    return [4 /*yield*/, ctx.scene.enter("reqAIO")];
                 case 2:
-                    if (!thankReply(ctx.message.text)) return [3 /*break*/, 4];
+                    _b.sent();
+                    return [3 /*break*/, 7];
+                case 3:
+                    if (!(text.startsWith("/s") || text.startsWith("/h"))) return [3 /*break*/, 5];
+                    return [4 /*yield*/, ctx.scene.enter("reqAIO")];
+                case 4:
+                    _b.sent();
+                    return [3 /*break*/, 7];
+                case 5:
+                    if (!(!ctx.message.reply_to_message &&
+                        !text.includes("@") &&
+                        !text.includes("/") &&
+                        text.length > 4 &&
+                        !containsEmoji(text))) return [3 /*break*/, 7];
+                    return [4 /*yield*/, ctx.scene.enter("reqAIO")];
+                case 6:
+                    _b.sent();
+                    _b.label = 7;
+                case 7:
+                    if (!thankReply(text)) return [3 /*break*/, 9];
                     return [4 /*yield*/, ctx
                             .reply("If you really want to thank me so add two members for me\nhere my official Channel for updates and backup ".concat("@" + env.join))
                             .then(function (sentMessage) {
-                            var messageIdToDelete = sentMessage.message_id;
-                            setTimeout(function () {
-                                ctx.deleteMessage(messageIdToDelete);
-                            }, 1 * 60 * 60 * 1000);
+                            try {
+                                var messageIdToDelete_1 = sentMessage.message_id;
+                                setTimeout(function () {
+                                    ctx.deleteMessage(messageIdToDelete_1);
+                                }, 1 * 60 * 1000);
+                            }
+                            catch (_a) { }
                         })];
-                case 3:
-                    _a.sent();
-                    _a.label = 4;
-                case 4:
+                case 8:
+                    _b.sent();
+                    _b.label = 9;
+                case 9: return [3 /*break*/, 11];
+                case 10:
+                    error_1 = _b.sent();
+                    return [3 /*break*/, 11];
+                case 11:
                     next();
                     return [2 /*return*/];
             }
         });
     });
 }
-var containsEmoji = function (str) {
+function containsEmoji(str) {
     var emojiPattern = /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/gi;
     return emojiPattern.test(str);
-};
+}

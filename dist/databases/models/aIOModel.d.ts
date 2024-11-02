@@ -35,4 +35,5 @@ export declare const aioSchema: mongoose.Schema<AIODocument, mongoose.Model<AIOD
     _id: mongoose.Types.ObjectId;
 }>;
 declare const DramaModel: Model<AIODocument>;
+export declare const HindiDramaModel: Model<AIODocument>;
 export default DramaModel;

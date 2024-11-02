@@ -62,34 +62,46 @@ var Telegram = /** @class */ (function () {
     }
     Telegram.prototype.initialize = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, forceChatIds;
+            var e_1, forceChatIds;
             var _this = this;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0:
-                        _b.trys.push([0, 2, , 3]);
+                        _a.trys.push([0, 2, , 3]);
                         return [4 /*yield*/, this.app.telegram.setMyCommands([
                                 {
                                     command: "start",
                                     description: "start bot",
                                 },
                                 {
-                                    command: "addaio",
+                                    command: "add",
                                     description: "Admin Command",
                                 },
                                 {
-                                    command: "editaio",
+                                    command: "edit",
                                     description: "Admin Command",
+                                },
+                                {
+                                    command: "/cancel",
+                                    description: "Admin Command",
+                                },
+                                {
+                                    command: "/totalusers",
+                                    description: "Admin Command",
+                                },
+                                {
+                                    command: "/myinvites",
+                                    description: "To Check Your Invites",
                                 },
                             ])];
                     case 1:
-                        _b.sent();
+                        _a.sent();
                         return [3 /*break*/, 3];
                     case 2:
-                        _a = _b.sent();
+                        e_1 = _a.sent();
                         return [3 /*break*/, 3];
                     case 3:
-                        forceChatIds = __spreadArray([], env.forceGroupIds, true);
+                        forceChatIds = __spreadArray(__spreadArray([], env.forceChannelIds, true), env.forceGroupIds, true);
                         return [4 /*yield*/, mapAsync(forceChatIds, function (chatId) { return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_a) {
                                 switch (_a.label) {
                                     case 0: return [4 /*yield*/, this.getInviteLink(chatId)];
@@ -97,7 +109,7 @@ var Telegram = /** @class */ (function () {
                                 }
                             }); }); })];
                     case 4:
-                        _b.sent();
+                        _a.sent();
                         return [2 /*return*/];
                 }
             });
@@ -203,7 +215,7 @@ var Telegram = /** @class */ (function () {
                         rawButtons = _b.sent();
                         forceChatButtons = splitArray(rawButtons, limitPerRow);
                         forceChatButtons.push([
-                            Markup.button.url("You need to join this first", "https://t.me/".concat((_a = this.app.botInfo) === null || _a === void 0 ? void 0 : _a.username, "?start=").concat(shareId, "-eng")),
+                            Markup.button.url("Try again after join above chats", "https://t.me/".concat((_a = this.app.botInfo) === null || _a === void 0 ? void 0 : _a.username, "?start=").concat(shareId, "-eng")),
                         ]);
                         return [2 /*return*/, {
                                 inline_keyboard: forceChatButtons,
@@ -227,6 +239,7 @@ var Telegram = /** @class */ (function () {
         if (captions === void 0) { captions = []; }
         return __awaiter(this, void 0, void 0, function () {
             var resultIds, i, messageId, caption, success, result, result, error_1;
+            var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -286,7 +299,28 @@ var Telegram = /** @class */ (function () {
                         return [3 /*break*/, 1];
                     case 16:
                         if (!deleteOrNot) return [3 /*break*/, 18];
-                        return [4 /*yield*/, this.app.telegram.sendMessage(toChatId, "I will delete the above files in 5 minutes, so forward them to another chat.")];
+                        return [4 /*yield*/, this.app.telegram
+                                .sendMessage(toChatId, "I will delete the above files in 5 minutes, so forward them to another chat.")
+                                .then(function (sentMessage) {
+                                var messageIdToDelete = sentMessage.message_id;
+                                setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
+                                    var _a;
+                                    return __generator(this, function (_b) {
+                                        switch (_b.label) {
+                                            case 0:
+                                                _b.trys.push([0, 2, , 3]);
+                                                return [4 /*yield*/, this.app.telegram.deleteMessage(toChatId, messageIdToDelete)];
+                                            case 1:
+                                                _b.sent();
+                                                return [3 /*break*/, 3];
+                                            case 2:
+                                                _a = _b.sent();
+                                                return [3 /*break*/, 3];
+                                            case 3: return [2 /*return*/];
+                                        }
+                                    });
+                                }); }, 5 * 60 * 1000);
+                            })];
                     case 17:
                         _a.sent();
                         _a.label = 18;
@@ -300,7 +334,7 @@ var Telegram = /** @class */ (function () {
             var chatIds;
             var _this = this;
             return __generator(this, function (_a) {
-                chatIds = __spreadArray([], env.forceGroupIds, true);
+                chatIds = __spreadArray(__spreadArray([], env.forceChannelIds, true), env.forceGroupIds, true);
                 return [2 /*return*/, filterAsync(chatIds, function (chatId) { return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0: return [4 /*yield*/, this.alreadyJoinChat(chatId, userId)];

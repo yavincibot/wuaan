@@ -1,4 +1,5 @@
+import crypto from "crypto";
 export default function getRandomId() {
-    var timestamp = Date.now();
-    return timestamp;
+    var buffer = crypto.randomBytes(4);
+    return buffer.readUInt32BE(0);
 }

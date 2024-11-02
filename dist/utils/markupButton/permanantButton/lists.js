@@ -187,21 +187,7 @@ var reservedWordList = [
     "720p",
     "[hd]",
 ];
-var thankList = [
-    "Thanks",
-    "Thank you",
-    "Thx",
-    "Tnx",
-    "Cheers",
-    "Gracias",
-    "Danke",
-    "Merci",
-    "Ta",
-    "Appreciate it",
-    "Thanks a lot",
-    "Thank you so much",
-    "TYSM",
-];
+var thankList = ["Thanks", "Thank you", "Thx", "Tnx", "Thank you so much", "TYSM"];
 function thankReply(text) {
     var lowerText = text.toLowerCase();
     for (var _i = 0, thankList_1 = thankList; _i < thankList_1.length; _i++) {

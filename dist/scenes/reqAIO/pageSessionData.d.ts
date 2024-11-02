@@ -4,5 +4,6 @@ export default interface PageSessionData extends WizardSessionData {
     page?: number;
     prev?: string;
     next?: string;
+    hindi?: boolean;
     aIOData?: AIODocument[];
 }

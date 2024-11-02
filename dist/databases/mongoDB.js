@@ -38,14 +38,22 @@ import mongoose from "mongoose";
 import env from "../services/env.js";
 import MessageModel from "./models/messageModel.js";
 import UserModel from "./models/userModel.js";
+import SortModel from "./models/sortModel.js";
 import AIOModel from "./models/aIOModel.js";
+import OngoingModel from "./models/ongoingModel.js";
+import { HindiDramaModel } from "./models/aIOModel.js";
+import { InviteService } from "./inviteService.js";
 var MongoDB = /** @class */ (function () {
     function MongoDB() {
         this.db = mongoose;
         this.MessageModel = MessageModel;
         this.UserModel = UserModel;
+        this.SortModel = SortModel;
         this.AIOModel = AIOModel;
+        this.OngoingModel = OngoingModel;
+        this.HindiDramaModel = HindiDramaModel;
         this.databaseUrl = env.databaseUrl || "";
+        this.inviteService = new InviteService();
     }
     MongoDB.prototype.initialize = function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -76,12 +84,125 @@ var MongoDB = /** @class */ (function () {
     };
     MongoDB.prototype.saveUser = function (user) {
         return __awaiter(this, void 0, void 0, function () {
+            var existingUser, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, new this.UserModel(user).save()];
+                    case 0:
+                        _a.trys.push([0, 4, , 5]);
+                        return [4 /*yield*/, this.UserModel.findOne({ id: Number(user.id) })];
+                    case 1:
+                        existingUser = _a.sent();
+                        if (!!existingUser) return [3 /*break*/, 3];
+                        return [4 /*yield*/, new this.UserModel(user).save()];
+                    case 2:
+                        _a.sent();
+                        _a.label = 3;
+                    case 3: return [2 /*return*/, user];
+                    case 4:
+                        error_1 = _a.sent();
+                        console.error("Error saving user:", error_1);
+                        return [3 /*break*/, 5];
+                    case 5: return [2 /*return*/, user];
+                }
+            });
+        });
+    };
+    MongoDB.prototype.getAllUserIds = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var users, userIds, error_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, UserModel.find().select("id")];
+                    case 1:
+                        users = _a.sent();
+                        userIds = users.map(function (user) { return user.id; });
+                        return [2 /*return*/, userIds];
+                    case 2:
+                        error_2 = _a.sent();
+                        console.error("Error fetching user IDs:", error_2);
+                        return [2 /*return*/, []];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    MongoDB.prototype.isUserExist = function (userId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var userExists, error_3;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.UserModel.findOne({ id: Number(userId) })];
+                    case 1:
+                        userExists = _a.sent();
+                        console.log(userExists);
+                        return [2 /*return*/, (userExists === null || userExists === void 0 ? void 0 : userExists.id) ? true : false];
+                    case 2:
+                        error_3 = _a.sent();
+                        console.error("Error checking user existence:", error_3);
+                        return [2 /*return*/, false];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    MongoDB.prototype.countUsers = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var itemCount, error_4;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.UserModel.countDocuments()];
+                    case 1:
+                        itemCount = _a.sent();
+                        return [2 /*return*/, ": ".concat(itemCount)];
+                    case 2:
+                        error_4 = _a.sent();
+                        return [2 /*return*/, "Error counting users"];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    MongoDB.prototype.saveSort = function (sort) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, new this.SortModel(sort).save()];
                     case 1:
                         _a.sent();
-                        return [2 /*return*/, user];
+                        return [2 /*return*/, sort];
+                }
+            });
+        });
+    };
+    MongoDB.prototype.removeFirstItem = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var document_1, removedItem, err_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 3, , 4]);
+                        return [4 /*yield*/, SortModel.findOne({}, { sort: { $slice: 1 } })];
+                    case 1:
+                        document_1 = _a.sent();
+                        if (!document_1 || document_1.sort.length === 0) {
+                            console.log("No document found or the sort array is empty.");
+                            return [2 /*return*/, null];
+                        }
+                        removedItem = document_1.sort[0];
+                        return [4 /*yield*/, SortModel.findOneAndUpdate({ _id: document_1._id }, { $pop: { sort: -1 } }, { new: true })];
+                    case 2:
+                        _a.sent();
+                        return [2 /*return*/, removedItem];
+                    case 3:
+                        err_1 = _a.sent();
+                        return [2 /*return*/, null];
+                    case 4: return [2 /*return*/];
                 }
             });
         });
@@ -108,6 +229,17 @@ var MongoDB = /** @class */ (function () {
             });
         });
     };
+    MongoDB.prototype.getOngoingMessages = function (shareId) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0: return [4 /*yield*/, this.OngoingModel.findOne({ shareId: shareId })];
+                    case 1: return [2 /*return*/, (_a = (_b.sent())) === null || _a === void 0 ? void 0 : _a.messageIds];
+                }
+            });
+        });
+    };
     MongoDB.prototype.saveAIO = function (aio) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -120,18 +252,53 @@ var MongoDB = /** @class */ (function () {
             });
         });
     };
+    MongoDB.prototype.saveOngoing = function (ong) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, new this.OngoingModel(ong).save()];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/, ong];
+                }
+            });
+        });
+    };
+    MongoDB.prototype.getHindiMessages = function (shareId) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0: return [4 /*yield*/, this.HindiDramaModel.findOne({ shareId: shareId })];
+                    case 1: return [2 /*return*/, (_a = (_b.sent())) === null || _a === void 0 ? void 0 : _a.messageIds];
+                }
+            });
+        });
+    };
+    MongoDB.prototype.saveHindiDrama = function (aio) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, new this.HindiDramaModel(aio).save()];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/, aio];
+                }
+            });
+        });
+    };
     MongoDB.prototype.searchAIO = function (criteria) {
         return __awaiter(this, void 0, void 0, function () {
-            var normalizedTitle, first20Chars, query, specialQuery, keywords, regexPattern, results, fallbackQuery, err_1;
+            var normalizedTitle, first20Chars, query, specialQuery, keywords, regexPattern, results, err_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (!criteria.aIOTitle || criteria.aIOTitle.length < 3) {
+                        if (!criteria.aIOTitle || criteria.aIOTitle.length < 2) {
                             console.log("Please provide a valid search criteria.");
                             return [2 /*return*/, undefined];
                         }
                         normalizedTitle = criteria.aIOTitle;
-                        first20Chars = normalizedTitle.slice(0, 30);
+                        first20Chars = normalizedTitle.slice(0, 20);
                         query = {
                             aIOTitle: { $regex: new RegExp(first20Chars, "i") },
                         };
@@ -149,30 +316,69 @@ var MongoDB = /** @class */ (function () {
                         }
                         _a.label = 1;
                     case 1:
-                        _a.trys.push([1, 7, , 8]);
-                        return [4 /*yield*/, this.AIOModel.find(query).limit(10)];
+                        _a.trys.push([1, 5, , 6]);
+                        return [4 /*yield*/, this.AIOModel.find(query)];
                     case 2:
                         results = _a.sent();
                         if (!(results.length === 0 && Object.keys(specialQuery).length > 0)) return [3 /*break*/, 4];
-                        return [4 /*yield*/, this.AIOModel.find(specialQuery).limit(10)];
+                        return [4 /*yield*/, this.AIOModel.find(specialQuery)];
                     case 3:
                         results = _a.sent();
                         _a.label = 4;
-                    case 4:
-                        if (!(results.length === 0)) return [3 /*break*/, 6];
-                        fallbackQuery = {
-                            aIOTitle: { $regex: new RegExp(normalizedTitle.slice(0, 15), "i") },
-                        };
-                        return [4 /*yield*/, this.AIOModel.find(fallbackQuery).limit(10)];
+                    case 4: return [2 /*return*/, results];
                     case 5:
-                        results = _a.sent();
-                        _a.label = 6;
-                    case 6: return [2 /*return*/, results];
-                    case 7:
-                        err_1 = _a.sent();
-                        console.error("Error executing the query:", err_1);
+                        err_2 = _a.sent();
+                        console.error("Error executing the query:", err_2);
                         return [2 /*return*/, undefined];
-                    case 8: return [2 /*return*/];
+                    case 6: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    MongoDB.prototype.searchHindiDrama = function (criteria) {
+        return __awaiter(this, void 0, void 0, function () {
+            var normalizedTitle, first20Chars, query, specialQuery, keywords, regexPattern, results, err_3;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!criteria.aIOTitle || criteria.aIOTitle.length < 2) {
+                            console.log("Please provide a valid search criteria.");
+                            return [2 /*return*/, undefined];
+                        }
+                        normalizedTitle = criteria.aIOTitle;
+                        first20Chars = normalizedTitle.slice(0, 20);
+                        query = {
+                            aIOTitle: { $regex: new RegExp(first20Chars, "i") },
+                        };
+                        specialQuery = {};
+                        if (first20Chars.length > 4) {
+                            keywords = first20Chars
+                                .replace(/\s+/g, " ")
+                                .split(" ")
+                                .map(function (keyword) { return "(?=.*".concat(keyword, ")"); })
+                                .join("");
+                            regexPattern = new RegExp("^".concat(keywords), "i");
+                            specialQuery = {
+                                aIOTitle: { $regex: regexPattern },
+                            };
+                        }
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 5, , 6]);
+                        return [4 /*yield*/, this.HindiDramaModel.find(query)];
+                    case 2:
+                        results = _a.sent();
+                        if (!(results.length === 0 && Object.keys(specialQuery).length > 0)) return [3 /*break*/, 4];
+                        return [4 /*yield*/, this.HindiDramaModel.find(specialQuery)];
+                    case 3:
+                        results = _a.sent();
+                        _a.label = 4;
+                    case 4: return [2 /*return*/, results];
+                    case 5:
+                        err_3 = _a.sent();
+                        console.error("Error executing the query:", err_3);
+                        return [2 /*return*/, undefined];
+                    case 6: return [2 /*return*/];
                 }
             });
         });
@@ -215,7 +421,7 @@ var MongoDB = /** @class */ (function () {
     };
     MongoDB.prototype.updateAIOAttribute = function (shareId, updateQuery) {
         return __awaiter(this, void 0, void 0, function () {
-            var error_1;
+            var error_5;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -225,10 +431,49 @@ var MongoDB = /** @class */ (function () {
                         _a.sent();
                         return [2 /*return*/, true];
                     case 2:
-                        error_1 = _a.sent();
-                        console.error("Error updating drama attribute:", error_1);
+                        error_5 = _a.sent();
+                        console.error("Error updating drama attribute:", error_5);
                         return [2 /*return*/, false];
                     case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    //invite
+    MongoDB.prototype.addInvite = function (userId, invitedUsername, invitedUserId) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.inviteService.addInvite(userId, invitedUsername, invitedUserId)];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    MongoDB.prototype.getInviteUser = function (userId) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.inviteService.getInviteUser(userId)];
+            });
+        });
+    };
+    MongoDB.prototype.canRequest = function (userId) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.inviteService.canRequest(userId)];
+            });
+        });
+    };
+    MongoDB.prototype.useRequest = function (userId) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.inviteService.useRequest(userId)];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
                 }
             });
         });

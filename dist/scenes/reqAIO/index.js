@@ -45,89 +45,116 @@ import { reservedWordList } from "../../utils/markupButton/permanantButton/lists
 import { cleanString } from "./cleanReq.js";
 // Create a Wizard Scene
 var paginationWizard = new Scenes.WizardScene("reqAIO", Composer.on("message", function (ctx) { return __awaiter(void 0, void 0, void 0, function () {
-    var request, searchCriteria, finalResult, random, photo;
+    var request, finalResult, searchCriteria, searchCriteria_1, random, photo, link, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                if (!("text" in ctx.message)) return [3 /*break*/, 8];
+                if (!("text" in ctx.message)) return [3 /*break*/, 13];
                 ctx.session.page = 0;
-                request = ctx.message.text.replace("/eng", "").trim();
-                if (!(!reservedWordList.includes(request.toLocaleLowerCase()) && request.length > 2)) return [3 /*break*/, 6];
+                ctx.session.hindi = false;
+                request = ctx.message.text.trim();
+                finalResult = void 0;
+                searchCriteria = void 0;
+                if (!request.startsWith("/h")) return [3 /*break*/, 2];
+                ctx.session.hindi = true;
+                request = request.replace("/h", "").trim();
+                searchCriteria = {
+                    aIOTitle: cleanString(request.toLocaleLowerCase()),
+                };
+                return [4 /*yield*/, database.searchHindiDrama(searchCriteria)];
+            case 1:
+                finalResult = _a.sent();
+                return [3 /*break*/, 4];
+            case 2:
+                request = request.replace("/s", "").trim();
                 searchCriteria = {
                     aIOTitle: cleanString(request.toLocaleLowerCase()),
                 };
                 return [4 /*yield*/, database.searchAIO(searchCriteria)];
-            case 1:
+            case 3:
                 finalResult = _a.sent();
+                _a.label = 4;
+            case 4:
+                if (!(!reservedWordList.includes(request.toLowerCase()) && request.length > 2)) return [3 /*break*/, 11];
+                searchCriteria_1 = {
+                    aIOTitle: cleanString(request.toLocaleLowerCase()),
+                };
                 random = getRandomId();
                 ctx.session.prev = "prev".concat(random);
                 ctx.session.next = "next".concat(random);
                 console.log(ctx.session.prev);
                 ctx.session.aIOData = finalResult;
-                if (!(finalResult && finalResult.length > 0)) return [3 /*break*/, 3];
+                if (!(finalResult && finalResult.length > 0)) return [3 /*break*/, 9];
                 photo = finalResult[0].aIOPosterID;
+                link = void 0;
+                if (!ctx.session.hindi) {
+                    link = "https://t.me/".concat(env.botUserName, "?start=").concat(finalResult[0].shareId, "-eng");
+                }
+                else if (ctx.session.hindi) {
+                    link = "https://t.me/".concat(env.botUserName, "?start=").concat(finalResult[0].shareId, "-hindi");
+                }
+                else {
+                    link = "https://t.me/".concat(env.botUserName, "?start=").concat(finalResult[0].shareId, "-eng");
+                }
+                _a.label = 5;
+            case 5:
+                _a.trys.push([5, 7, , 8]);
                 return [4 /*yield*/, ctx
                         .replyWithPhoto(photo, {
                         caption: "```\n".concat(makeAIOCaption(finalResult[0]), "\n```"),
-                        reply_markup: makeButtons("https://t.me/".concat(env.botUserName, "?start=").concat(finalResult[0].shareId, "-eng"), ctx.session.next || "", ctx.session.prev || ""),
+                        reply_markup: makeButtons(link, ctx.session.next || "", ctx.session.prev || ""),
                         parse_mode: "MarkdownV2",
                         reply_to_message_id: ctx.message.message_id,
                     })
                         .then(function (sentMessage) {
-                        try {
-                            var messageIdToDelete_1 = sentMessage.message_id;
-                            setTimeout(function () { return __awaiter(void 0, void 0, void 0, function () {
-                                return __generator(this, function (_a) {
-                                    switch (_a.label) {
-                                        case 0: return [4 /*yield*/, ctx.deleteMessage(messageIdToDelete_1)];
-                                        case 1:
-                                            _a.sent();
-                                            return [2 /*return*/];
-                                    }
-                                });
-                            }); }, 15 * 60 * 1000);
-                        }
-                        catch (_a) { }
+                        var messageIdToDelete = sentMessage.message_id;
+                        setTimeout(function () {
+                            ctx.deleteMessage(messageIdToDelete);
+                        }, 5 * 60 * 1000);
                     })];
-            case 2:
+            case 6:
                 _a.sent();
+                return [3 /*break*/, 8];
+            case 7:
+                error_1 = _a.sent();
+                return [3 /*break*/, 8];
+            case 8:
                 if (finalResult.length > 1) {
                     return [2 /*return*/, ctx.wizard.next()];
                 }
-                return [3 /*break*/, 5];
-            case 3: return [4 /*yield*/, ctx.scene.leave()];
-            case 4:
+                return [3 /*break*/, 10];
+            case 9:
+                ctx.scene.leave;
+                _a.label = 10;
+            case 10: return [2 /*return*/, ctx.wizard.next()];
+            case 11: return [4 /*yield*/, ctx.scene.leave()];
+            case 12:
                 _a.sent();
-                _a.label = 5;
-            case 5: return [2 /*return*/, ctx.wizard.next()];
-            case 6: 
-            // await ctx.reply(`${ctx.from.first_name} your ${request} is reserved `);
-            return [4 /*yield*/, ctx.scene.leave()];
-            case 7:
-                // await ctx.reply(`${ctx.from.first_name} your ${request} is reserved `);
-                _a.sent();
-                _a.label = 8;
-            case 8: return [2 /*return*/];
+                _a.label = 13;
+            case 13: return [2 /*return*/];
         }
     });
 }); }), Composer.on("callback_query", function (ctx) { return __awaiter(void 0, void 0, void 0, function () {
-    var page, aIOData, photo, photo;
+    var page, aIOData, photo, link, photo, link, error_2;
     var _a, _b, _c;
     return __generator(this, function (_d) {
         switch (_d.label) {
             case 0:
                 if (!("data" in ctx.callbackQuery &&
                     (ctx.session.next === ctx.callbackQuery.data ||
-                        ctx.session.prev === ctx.callbackQuery.data))) return [3 /*break*/, 15];
+                        ctx.session.prev === ctx.callbackQuery.data))) return [3 /*break*/, 18];
                 page = ctx.session.page || 0;
                 aIOData = ctx.session.aIOData;
                 console.log([
                     ctx.session.page || 0,
                     (_a = ctx.session.aIOData) === null || _a === void 0 ? void 0 : _a.length,
                 ]);
-                if (!aIOData) return [3 /*break*/, 12];
-                if (!ctx.callbackQuery.data.startsWith("next")) return [3 /*break*/, 6];
-                if (!(page + 1 < aIOData.length)) return [3 /*break*/, 3];
+                if (!aIOData) return [3 /*break*/, 15];
+                _d.label = 1;
+            case 1:
+                _d.trys.push([1, 13, , 14]);
+                if (!ctx.callbackQuery.data.startsWith("next")) return [3 /*break*/, 7];
+                if (!(page + 1 < aIOData.length)) return [3 /*break*/, 4];
                 ctx.session.page =
                     ((_b = ctx.session.page) !== null && _b !== void 0 ? _b : 0) + 1;
                 console.log(page, aIOData.length);
@@ -137,55 +164,75 @@ var paginationWizard = new Scenes.WizardScene("reqAIO", Composer.on("message", f
                         type: "photo",
                         media: photo,
                     })];
-            case 1:
+            case 2:
                 //edit
                 _d.sent();
+                link = void 0;
+                if (aIOData[page + 1].aioShortUrl === "null") {
+                    link = "https://t.me/".concat(env.botUserName, "?start=").concat(aIOData[page + 1].shareId, "-eng");
+                }
+                else {
+                    // link = aIOData[page + 1].aioShortUrl;
+                    link = "https://t.me/".concat(env.botUserName, "?start=").concat(aIOData[page + 1].shareId, "-eng");
+                }
                 return [4 /*yield*/, ctx.editMessageCaption("```\n".concat(makeAIOCaption(aIOData[page + 1]), "\n```"), {
-                        reply_markup: makeButtons("https://t.me/".concat(env.botUserName, "?start=").concat(aIOData[page + 1].shareId, "-eng"), ctx.session.next || "", ctx.session.prev || ""),
+                        reply_markup: makeButtons(link, ctx.session.next || "", ctx.session.prev || ""),
                         parse_mode: "MarkdownV2",
                     })];
-            case 2:
+            case 3:
                 _d.sent();
-                return [3 /*break*/, 5];
-            case 3: return [4 /*yield*/, sendCallbackQueryResponse(ctx, "This is the last no more there !! ")];
-            case 4:
+                return [3 /*break*/, 6];
+            case 4: return [4 /*yield*/, sendCallbackQueryResponse(ctx, "This is the last no more there !! ")];
+            case 5:
                 _d.sent();
-                _d.label = 5;
-            case 5: return [3 /*break*/, 11];
-            case 6:
-                if (!ctx.callbackQuery.data.startsWith("prev")) return [3 /*break*/, 11];
-                if (!(aIOData && page != 0)) return [3 /*break*/, 9];
+                _d.label = 6;
+            case 6: return [3 /*break*/, 12];
+            case 7:
+                if (!ctx.callbackQuery.data.startsWith("prev")) return [3 /*break*/, 12];
+                if (!(aIOData && page != 0)) return [3 /*break*/, 10];
                 //ignore this page != 0
                 ctx.session.page = Math.max(((_c = ctx.session.page) !== null && _c !== void 0 ? _c : 0) - 1, 0);
                 photo = aIOData[page - 1].aIOPosterID;
+                link = void 0;
+                if (aIOData[page - 1].aioShortUrl === "null") {
+                    link = "https://t.me/".concat(env.botUserName, "?start=").concat(aIOData[page - 1].shareId, "-eng");
+                }
+                else {
+                    // link = aIOData[page - 1].aioShortUrl;
+                    link = "https://t.me/".concat(env.botUserName, "?start=").concat(aIOData[page - 1].shareId, "-eng");
+                }
                 return [4 /*yield*/, ctx.editMessageMedia({
                         type: "photo",
                         media: photo,
                     })];
-            case 7:
-                _d.sent();
-                return [4 /*yield*/, ctx.editMessageCaption("```\n ".concat(makeAIOCaption(aIOData[page - 1]), "\n```"), {
-                        reply_markup: makeButtons("https://t.me/".concat(env.botUserName, "?start=").concat(aIOData[page - 1].shareId, "-eng"), ctx.session.next || "", ctx.session.prev || ""),
-                        parse_mode: "MarkdownV2",
-                    })];
             case 8:
                 _d.sent();
-                return [3 /*break*/, 11];
-            case 9: return [4 /*yield*/, sendCallbackQueryResponse(ctx, "Nothing in Prev !! ")];
-            case 10:
+                return [4 /*yield*/, ctx.editMessageCaption("```\n ".concat(makeAIOCaption(aIOData[page - 1]), "\n```"), {
+                        reply_markup: makeButtons(link, ctx.session.next || "", ctx.session.prev || ""),
+                        parse_mode: "MarkdownV2",
+                    })];
+            case 9:
                 _d.sent();
-                _d.label = 11;
-            case 11: return [3 /*break*/, 14];
-            case 12: return [4 /*yield*/, sendCallbackQueryResponse(ctx, "No more data there !!!")];
+                return [3 /*break*/, 12];
+            case 10: return [4 /*yield*/, sendCallbackQueryResponse(ctx, "Nothing in Prev !! ")];
+            case 11:
+                _d.sent();
+                _d.label = 12;
+            case 12: return [3 /*break*/, 14];
             case 13:
-                _d.sent();
-                _d.label = 14;
+                error_2 = _d.sent();
+                return [3 /*break*/, 14];
             case 14: return [3 /*break*/, 17];
-            case 15: return [4 /*yield*/, sendCallbackQueryResponse(ctx, "you need to search again this  !!!")];
+            case 15: return [4 /*yield*/, sendCallbackQueryResponse(ctx, "No more data there !!!")];
             case 16:
                 _d.sent();
                 _d.label = 17;
-            case 17: return [2 /*return*/];
+            case 17: return [3 /*break*/, 20];
+            case 18: return [4 /*yield*/, sendCallbackQueryResponse(ctx, "you need to search again this  !!!")];
+            case 19:
+                _d.sent();
+                _d.label = 20;
+            case 20: return [2 /*return*/];
         }
     });
 }); }));

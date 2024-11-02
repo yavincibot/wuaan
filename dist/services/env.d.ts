@@ -1,5 +1,9 @@
 import "dotenv/config";
 declare const _default: {
+    baseUrl: string;
+    collectionAIOBackup: string | number;
+    logGroupId: number;
+    sortApiKey: string;
     token: string;
     botUserName: string | undefined;
     dbPosterLink: string | undefined;
@@ -9,14 +13,17 @@ declare const _default: {
     port: string | number;
     channelSourceLink: string | undefined;
     join: string;
-    collectionDrama: string;
-    collectionAnime: string;
-    collectionMovie: string;
+    backup: string;
     dbAIOChannelId: number;
+    dbOngoingChannelId: number;
     joinAnime: string;
     collectionAIO: string | number;
+    collectionOngoing: string | number;
     channelSource: number;
+    request: string;
+    forceChannelIds: number[];
     allowGroups: number[];
+    withoutCmd: number[];
     forceGroupIds: number[];
     adminIds: number[];
     databaseUrl: string | undefined;

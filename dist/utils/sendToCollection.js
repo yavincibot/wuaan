@@ -61,3 +61,50 @@ export function sendToCOllection(chat, aIOPosterID, link, caption) {
         });
     });
 }
+export function sendToCOllectionOng(chat, link, caption) {
+    return __awaiter(this, void 0, void 0, function () {
+        var error_2;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, telegram.app.telegram.sendMessage(chat, "```\n".concat(caption, "\n```") || "", {
+                            parse_mode: "Markdown",
+                            reply_markup: keyboard.makeCollectionButton(link),
+                        })];
+                case 1:
+                    _a.sent();
+                    console.log("Photo sent successfully!");
+                    return [3 /*break*/, 3];
+                case 2:
+                    error_2 = _a.sent();
+                    console.error("Error sending photo:", error_2);
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    });
+}
+export function sendToLogGroup(chat, caption) {
+    return __awaiter(this, void 0, void 0, function () {
+        var error_3;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, telegram.app.telegram.sendMessage(chat, caption || "", {
+                            parse_mode: "Markdown",
+                        })];
+                case 1:
+                    _a.sent();
+                    console.log("log sent successfully!");
+                    return [3 /*break*/, 3];
+                case 2:
+                    error_3 = _a.sent();
+                    console.error("Error sending log:", error_3);
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    });
+}
