@@ -75,6 +75,7 @@ var paginationWizard = new Scenes.WizardScene("reqAIO", Composer.on("message", f
                 finalResult = _a.sent();
                 _a.label = 4;
             case 4:
+                console.log(finalResult);
                 if (!(!reservedWordList.includes(request.toLowerCase()) && request.length > 2)) return [3 /*break*/, 11];
                 searchCriteria_1 = {
                     aIOTitle: cleanString(request.toLocaleLowerCase()),
