@@ -258,9 +258,7 @@ var Telegram = /** @class */ (function () {
                     case 3:
                         _a.trys.push([3, 9, , 14]);
                         if (!deleteOrNot) return [3 /*break*/, 5];
-                        return [4 /*yield*/, this.app.telegram.copyMessage(toChatId, fromChatId, messageId, {
-                                caption: "join KDL_HERE",
-                            })];
+                        return [4 /*yield*/, this.app.telegram.copyMessage(toChatId, fromChatId, messageId)];
                     case 4:
                         result = _a.sent();
                         resultIds.push(result.message_id);
