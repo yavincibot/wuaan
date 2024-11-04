@@ -2,6 +2,7 @@ import "dotenv/config";
 declare const _default: {
     baseUrl: string;
     collectionAIOBackup: string | number;
+    collectionHindi: string | number;
     logGroupId: number;
     sortApiKey: string;
     token: string;

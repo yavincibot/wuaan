@@ -26,6 +26,7 @@ var join = env.JOIN || "";
 var backup = env.BACKUP || "";
 var request = env.REQUEST || "";
 var joinAnime = env.JOIN_ANIME || "";
+var collectionHindi = Number(env.COLLECTION_HINDI) || "";
 var collectionAIO = Number(env.COLLECTION_AIO) || "";
 var collectionOngoing = Number(env.ONGOING_COLLECTION) || "";
 var collectionAIOBackup = Number(env.COLLECTION_AIO_BACKUP) || "";
@@ -38,6 +39,7 @@ if (!adminIds) {
 export default {
     baseUrl: baseUrl,
     collectionAIOBackup: collectionAIOBackup,
+    collectionHindi: collectionHindi,
     logGroupId: logGroupId,
     sortApiKey: sortApiKey,
     token: token,

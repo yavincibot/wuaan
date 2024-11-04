@@ -141,9 +141,9 @@ function done(ctx) {
                     return [4 /*yield*/, ctx.scene.leave()];
                 case 2: return [2 /*return*/, _m.sent()];
                 case 3:
-                    if (!ctx.message) return [3 /*break*/, 30];
+                    if (!ctx.message) return [3 /*break*/, 32];
                     text = "text" in ctx.message ? ctx.message.text : "";
-                    if (!(text.toLowerCase() === "done" && !ctx.session.done)) return [3 /*break*/, 28];
+                    if (!(text.toLowerCase() === "done" && !ctx.session.done)) return [3 /*break*/, 30];
                     _h = ctx.session, backupChannel = _h.backupChannel, messageIds = _h.messageIds, aIOPosterID = _h.aIOPosterID, captions = _h.captions;
                     aIOTitle = ctx.session.aIOTitle;
                     return [4 /*yield*/, getPhotoUrl(aIOPosterID)];
@@ -167,7 +167,7 @@ function done(ctx) {
                     forwardedMessageIds = _m.sent();
                     _m.label = 7;
                 case 7:
-                    _m.trys.push([7, 25, , 27]);
+                    _m.trys.push([7, 27, , 29]);
                     return [4 /*yield*/, getAIOdata(AIODetails, forwardedMessageIds)];
                 case 8:
                     AIOData = _m.sent();
@@ -207,36 +207,41 @@ function done(ctx) {
                     return [4 /*yield*/, ctx.reply(link + " " + AIOData.aioShortUrl)];
                 case 17:
                     _m.sent();
-                    return [4 /*yield*/, sendToCOllection(env.collectionAIO, aIOPosterID, link, aIOTitle || "none")];
+                    if (!ctx.session.isHindi) return [3 /*break*/, 19];
+                    return [4 /*yield*/, sendToCOllection(env.collectionHindi, AIOData.aIOPosterID, link, AIOData.aIOTitle || "none")];
                 case 18:
                     _m.sent();
-                    return [4 /*yield*/, sendToCOllection(env.collectionAIOBackup, aIOPosterID, link, aIOTitle || "none")];
-                case 19:
-                    _m.sent();
-                    _m.label = 20;
+                    return [3 /*break*/, 22];
+                case 19: return [4 /*yield*/, sendToCOllection(env.collectionAIO, aIOPosterID, link, aIOTitle || "none")];
                 case 20:
-                    _m.trys.push([20, 22, , 23]);
+                    _m.sent();
+                    return [4 /*yield*/, sendToCOllection(env.collectionAIOBackup, aIOPosterID, link, aIOTitle || "none")];
+                case 21:
+                    _m.sent();
+                    _m.label = 22;
+                case 22:
+                    _m.trys.push([22, 24, , 25]);
                     user = {
                         id: ctx.from.id,
                         firstname: ctx.from.first_name,
                         username: ctx.from.username,
                     };
                     return [4 /*yield*/, sendToLogGroup(env.logGroupId, getUserLinkMessage("".concat(processCaptionForStore(((_b = AIODetails.aIOTitle) === null || _b === void 0 ? void 0 : _b.slice(0, 40)) || "none"), " added by ..."), user))];
-                case 21:
+                case 23:
                     _m.sent();
-                    return [3 /*break*/, 23];
-                case 22:
+                    return [3 /*break*/, 25];
+                case 24:
                     _l = _m.sent();
-                    return [3 /*break*/, 23];
-                case 23: return [4 /*yield*/, ctx.scene.leave()];
-                case 24: return [2 /*return*/, _m.sent()];
-                case 25:
+                    return [3 /*break*/, 25];
+                case 25: return [4 /*yield*/, ctx.scene.leave()];
+                case 26: return [2 /*return*/, _m.sent()];
+                case 27:
                     error_1 = _m.sent();
                     return [4 /*yield*/, ctx.scene.leave()];
-                case 26: return [2 /*return*/, _m.sent()];
-                case 27: return [3 /*break*/, 30];
-                case 28: return [4 /*yield*/, ctx.reply("Send next file if Done Click Done ".concat((_c = ctx.session.messageIds) === null || _c === void 0 ? void 0 : _c.length), keyboard.oneTimeDoneKeyboard())];
-                case 29:
+                case 28: return [2 /*return*/, _m.sent()];
+                case 29: return [3 /*break*/, 32];
+                case 30: return [4 /*yield*/, ctx.reply("Send next file if Done Click Done ".concat((_c = ctx.session.messageIds) === null || _c === void 0 ? void 0 : _c.length), keyboard.oneTimeDoneKeyboard())];
+                case 31:
                     _m.sent();
                     (_d = ctx.session.messageIds) === null || _d === void 0 ? void 0 : _d.push(ctx.message.message_id);
                     caption = getRandomId().toString();
@@ -255,8 +260,8 @@ function done(ctx) {
                         ctx.session.captions = ctx.session.captions || [];
                         (_g = ctx.session.captions) === null || _g === void 0 ? void 0 : _g.push(caption);
                     }
-                    _m.label = 30;
-                case 30: return [2 /*return*/];
+                    _m.label = 32;
+                case 32: return [2 /*return*/];
             }
         });
     });
