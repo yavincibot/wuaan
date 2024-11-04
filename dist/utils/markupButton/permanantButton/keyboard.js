@@ -57,7 +57,6 @@ export var makeCollectionButton = function (link) {
         inline_keyboard: [
             [{ text: "Download", url: link }],
             [{ text: "Join Back-Up", url: env.backup }],
-            [{ text: "❣️❣️ How to Download ❣️❣️", url: "https://t.me/Infinite_tips/17" }],
         ],
     };
 };
