@@ -130,7 +130,7 @@ function handlePosterAskRelatedMsg(ctx) {
 function done(ctx) {
     var _a, _b, _c, _d, _e, _f, _g;
     return __awaiter(this, void 0, void 0, function () {
-        var text, _h, backupChannel, messageIds, aIOPosterID, captions, aIOTitle, photoUrl, AIODetails, forwardedMessageIds, AIOData, shareId, link, botUsername, _j, _k, user, _l, error_1, caption;
+        var text, _h, backupChannel, messageIds, aIOPosterID, captions, aIOTitle, photoUrl, AIODetails, forwardedMessageIds, AIOData, shareId, link, botUsername, _j, _k, error_1, user, _l, error_2, caption;
         return __generator(this, function (_m) {
             switch (_m.label) {
                 case 0:
@@ -141,9 +141,9 @@ function done(ctx) {
                     return [4 /*yield*/, ctx.scene.leave()];
                 case 2: return [2 /*return*/, _m.sent()];
                 case 3:
-                    if (!ctx.message) return [3 /*break*/, 32];
+                    if (!ctx.message) return [3 /*break*/, 35];
                     text = "text" in ctx.message ? ctx.message.text : "";
-                    if (!(text.toLowerCase() === "done" && !ctx.session.done)) return [3 /*break*/, 30];
+                    if (!(text.toLowerCase() === "done" && !ctx.session.done)) return [3 /*break*/, 33];
                     _h = ctx.session, backupChannel = _h.backupChannel, messageIds = _h.messageIds, aIOPosterID = _h.aIOPosterID, captions = _h.captions;
                     aIOTitle = ctx.session.aIOTitle;
                     return [4 /*yield*/, getPhotoUrl(aIOPosterID)];
@@ -167,7 +167,7 @@ function done(ctx) {
                     forwardedMessageIds = _m.sent();
                     _m.label = 7;
                 case 7:
-                    _m.trys.push([7, 27, , 29]);
+                    _m.trys.push([7, 30, , 32]);
                     return [4 /*yield*/, getAIOdata(AIODetails, forwardedMessageIds)];
                 case 8:
                     AIOData = _m.sent();
@@ -207,41 +207,48 @@ function done(ctx) {
                     return [4 /*yield*/, ctx.reply(link + " " + AIOData.aioShortUrl)];
                 case 17:
                     _m.sent();
-                    if (!ctx.session.isHindi) return [3 /*break*/, 19];
-                    return [4 /*yield*/, sendToCOllection(env.collectionHindi, AIOData.aIOPosterID, link, AIOData.aIOTitle || "none")];
+                    if (!ctx.session.isHindi) return [3 /*break*/, 22];
+                    _m.label = 18;
                 case 18:
+                    _m.trys.push([18, 20, , 21]);
+                    return [4 /*yield*/, sendToCOllection(env.collectionHindi, AIOData.aIOPosterID, link, AIOData.aIOTitle || "none")];
+                case 19:
                     _m.sent();
-                    return [3 /*break*/, 22];
-                case 19: return [4 /*yield*/, sendToCOllection(env.collectionAIO, aIOPosterID, link, aIOTitle || "none")];
+                    return [3 /*break*/, 21];
                 case 20:
+                    error_1 = _m.sent();
+                    return [3 /*break*/, 21];
+                case 21: return [3 /*break*/, 25];
+                case 22: return [4 /*yield*/, sendToCOllection(env.collectionAIO, aIOPosterID, link, aIOTitle || "none")];
+                case 23:
                     _m.sent();
                     return [4 /*yield*/, sendToCOllection(env.collectionAIOBackup, aIOPosterID, link, aIOTitle || "none")];
-                case 21:
+                case 24:
                     _m.sent();
-                    _m.label = 22;
-                case 22:
-                    _m.trys.push([22, 24, , 25]);
+                    _m.label = 25;
+                case 25:
+                    _m.trys.push([25, 27, , 28]);
                     user = {
                         id: ctx.from.id,
                         firstname: ctx.from.first_name,
                         username: ctx.from.username,
                     };
                     return [4 /*yield*/, sendToLogGroup(env.logGroupId, getUserLinkMessage("".concat(processCaptionForStore(((_b = AIODetails.aIOTitle) === null || _b === void 0 ? void 0 : _b.slice(0, 40)) || "none"), " added by ..."), user))];
-                case 23:
+                case 26:
                     _m.sent();
-                    return [3 /*break*/, 25];
-                case 24:
-                    _l = _m.sent();
-                    return [3 /*break*/, 25];
-                case 25: return [4 /*yield*/, ctx.scene.leave()];
-                case 26: return [2 /*return*/, _m.sent()];
+                    return [3 /*break*/, 28];
                 case 27:
-                    error_1 = _m.sent();
+                    _l = _m.sent();
+                    return [3 /*break*/, 28];
+                case 28: return [4 /*yield*/, ctx.scene.leave()];
+                case 29: return [2 /*return*/, _m.sent()];
+                case 30:
+                    error_2 = _m.sent();
                     return [4 /*yield*/, ctx.scene.leave()];
-                case 28: return [2 /*return*/, _m.sent()];
-                case 29: return [3 /*break*/, 32];
-                case 30: return [4 /*yield*/, ctx.reply("Send next file if Done Click Done ".concat((_c = ctx.session.messageIds) === null || _c === void 0 ? void 0 : _c.length), keyboard.oneTimeDoneKeyboard())];
-                case 31:
+                case 31: return [2 /*return*/, _m.sent()];
+                case 32: return [3 /*break*/, 35];
+                case 33: return [4 /*yield*/, ctx.reply("Send next file if Done Click Done ".concat((_c = ctx.session.messageIds) === null || _c === void 0 ? void 0 : _c.length), keyboard.oneTimeDoneKeyboard())];
+                case 34:
                     _m.sent();
                     (_d = ctx.session.messageIds) === null || _d === void 0 ? void 0 : _d.push(ctx.message.message_id);
                     caption = getRandomId().toString();
@@ -260,15 +267,15 @@ function done(ctx) {
                         ctx.session.captions = ctx.session.captions || [];
                         (_g = ctx.session.captions) === null || _g === void 0 ? void 0 : _g.push(caption);
                     }
-                    _m.label = 32;
-                case 32: return [2 /*return*/];
+                    _m.label = 35;
+                case 35: return [2 /*return*/];
             }
         });
     });
 }
 export function getPhotoUrl(photoId) {
     return __awaiter(this, void 0, void 0, function () {
-        var success, photo, result, error_2;
+        var success, photo, result, error_3;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -289,16 +296,16 @@ export function getPhotoUrl(photoId) {
                     success = true;
                     return [3 /*break*/, 10];
                 case 5:
-                    error_2 = _a.sent();
+                    error_3 = _a.sent();
                     success = false;
-                    if (!(error_2.code === 429)) return [3 /*break*/, 7];
-                    console.log("".concat(error_2));
+                    if (!(error_3.code === 429)) return [3 /*break*/, 7];
+                    console.log("".concat(error_3));
                     return [4 /*yield*/, delay(40000, 41000)];
                 case 6:
                     _a.sent();
                     return [3 /*break*/, 9];
                 case 7:
-                    console.log("".concat(error_2));
+                    console.log("".concat(error_3));
                     return [4 /*yield*/, delay(40000, 41000)];
                 case 8:
                     _a.sent();
